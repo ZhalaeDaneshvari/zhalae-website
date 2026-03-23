@@ -172,6 +172,26 @@ body {
   gap: 0.45rem;
 }
 
+.command-launch {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  height: 2.2rem;
+  border-radius: 999px;
+  padding: 0 0.75rem;
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: transform 220ms ease, border-color 220ms ease, background-color 220ms ease;
+}
+
+.command-launch:hover {
+  transform: translateY(-2px);
+  border-color: var(--lime);
+  background: var(--lime-soft);
+}
+
 .icon-link {
   width: 2.2rem;
   height: 2.2rem;
@@ -464,9 +484,15 @@ h2 {
   background: var(--surface);
   color: var(--text);
   width: 42px;
-  font-size: 1.1rem;
+  padding: 0;
+  line-height: 0;
   cursor: pointer;
   transition: border-color 220ms ease, background-color 220ms ease, transform 220ms ease;
+}
+
+.carousel-arrow svg {
+  width: 18px;
+  height: 18px;
 }
 
 .carousel-arrow:hover {
@@ -695,6 +721,14 @@ h2 {
   display: inline-block;
   margin-left: 0.2rem;
   cursor: default;
+  color: var(--lime);
+  text-shadow: 0 0 10px color-mix(in srgb, var(--lime) 55%, transparent);
+  transition: text-shadow 220ms ease, transform 220ms ease;
+}
+
+.footer-easter:hover {
+  text-shadow: 0 0 14px color-mix(in srgb, var(--lime-bright) 70%, transparent);
+  transform: translateY(-1px);
 }
 
 .footer-easter-tooltip {
@@ -759,6 +793,12 @@ h2 {
 }
 
 .portfolio-hero h1 {
+  max-width: none;
+  font-size: clamp(2.3rem, 6vw, 4.4rem);
+}
+
+.experience-hero h1,
+.resume-hero h1 {
   max-width: none;
   font-size: clamp(2.3rem, 6vw, 4.4rem);
 }
@@ -1110,6 +1150,108 @@ h2 {
   cursor: pointer;
 }
 
+.command-palette {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: clamp(4.2rem, 11vh, 6.8rem);
+}
+
+.command-palette-backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(6, 8, 10, 0.56);
+  backdrop-filter: blur(4px);
+  cursor: pointer;
+}
+
+.command-palette-panel {
+  position: relative;
+  width: min(640px, 92vw);
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface) 95%, transparent);
+  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.32);
+}
+
+.command-palette-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.6rem;
+  border-bottom: 1px solid var(--border);
+  padding: 0.72rem;
+}
+
+.command-palette-input {
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  border-radius: 11px;
+  padding: 0.62rem 0.72rem;
+  font-size: 0.94rem;
+  outline: none;
+}
+
+.command-palette-input:focus {
+  border-color: var(--lime);
+  box-shadow: 0 0 0 3px var(--lime-soft);
+}
+
+.command-palette-shortcut {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.28rem 0.58rem;
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.command-palette-list {
+  max-height: min(50vh, 420px);
+  overflow-y: auto;
+  padding: 0.36rem;
+}
+
+.command-palette-item {
+  width: 100%;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  background: transparent;
+  color: var(--text);
+  padding: 0.68rem 0.72rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition: background-color 180ms ease, border-color 180ms ease;
+}
+
+.command-palette-item:hover,
+.command-palette-item.active {
+  background: var(--lime-soft);
+  border-color: color-mix(in srgb, var(--lime) 46%, var(--border) 54%);
+}
+
+.command-palette-item-hint {
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+
+.command-palette-empty {
+  margin: 0.32rem;
+  border-radius: 10px;
+  border: 1px dashed var(--border);
+  padding: 0.88rem;
+  color: var(--muted);
+}
+
 .experience-hero {
   margin-bottom: 1rem;
 }
@@ -1262,12 +1404,16 @@ h2 {
 }
 
 .timeline-arrow {
-  font-size: 1.35rem;
   color: color-mix(in srgb, var(--lime) 72%, var(--muted) 28%);
-  line-height: 1;
+  line-height: 0;
   opacity: 0.9;
   margin: -0.15rem 0 0.2rem;
   animation: arrow-flow 2.4s ease-in-out infinite;
+}
+
+.timeline-arrow-icon {
+  width: 24px;
+  height: 24px;
 }
 
 .timeline-arrow.right {
@@ -1384,6 +1530,12 @@ h2 {
     height: 1.95rem;
   }
 
+  .command-launch {
+    height: 1.95rem;
+    padding: 0 0.56rem;
+    font-size: 0.7rem;
+  }
+
   .nav-links a {
     font-size: 0.78rem;
   }
@@ -1487,6 +1639,14 @@ h2 {
 
   .panel {
     margin-top: 0.95rem;
+  }
+
+  .command-palette {
+    padding-top: 3.2rem;
+  }
+
+  .command-palette-panel {
+    width: 95vw;
   }
 }
 

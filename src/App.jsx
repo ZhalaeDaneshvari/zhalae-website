@@ -304,6 +304,18 @@ const HCI_VR_PROJECTS = [
       },
     ],
   },
+  {
+    title: "This Personal Website (Yes, This One)",
+    date: "March 2026",
+    clientTag: "Personal Project",
+    summary:
+      "A personal website that is part portfolio, part playground, and part proof that I learned something in my undergrad.",
+    details:
+      "Designed and built this site to showcase work across AI, UX/HCI, and research while keeping the experience fast, responsive, and a little playful.",
+    tools: ["React", "Vite", "JavaScript", "CSS", "Responsive Design", "GitHub Pages"],
+    repoLink: "https://github.com/ZhalaeDaneshvari/zhalae-website",
+    media: [],
+  },
 ];
 
 function toGoogleDrivePreviewUrl(url) {
@@ -398,10 +410,110 @@ function App() {
   const [activeImage, setActiveImage] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("Agentic AI");
   const [hoveredVideoKey, setHoveredVideoKey] = useState("");
+  const [isPaletteOpen, setIsPaletteOpen] = useState(false);
+  const [paletteQuery, setPaletteQuery] = useState("");
+  const [paletteIndex, setPaletteIndex] = useState(0);
   const [routePath, setRoutePath] = useState(() => getRouteFromLocation());
   const isExperiencePage = routePath.startsWith("/experience");
   const isPortfolioPage = routePath.startsWith("/portfolio");
   const isResumePage = routePath.startsWith("/resume");
+
+  const goToHomeAnchor = (anchor) => {
+    window.location.assign(`${toAppPath("/")}#${anchor}`);
+  };
+
+  const goToRoute = (path) => {
+    window.location.assign(toHashRoute(path));
+  };
+
+  const commandActions = [
+    {
+      label: "Go To Home",
+      keywords: "landing intro",
+      run: () => goToHomeAnchor("home"),
+    },
+    {
+      label: "Open Portfolio",
+      keywords: "projects work",
+      run: () => goToRoute("/portfolio"),
+    },
+    {
+      label: "Open Experience",
+      keywords: "timeline jobs internships",
+      run: () => goToRoute("/experience"),
+    },
+    {
+      label: "Open Resume",
+      keywords: "cv",
+      run: () => goToRoute("/resume"),
+    },
+    {
+      label: "Show Agentic AI Projects",
+      keywords: "portfolio category",
+      run: () => {
+        setSelectedCategory("Agentic AI");
+        goToRoute("/portfolio");
+      },
+    },
+    {
+      label: "Show UX / HCI Projects",
+      keywords: "portfolio category",
+      run: () => {
+        setSelectedCategory("UX / HCI");
+        goToRoute("/portfolio");
+      },
+    },
+    {
+      label: "Show Data Science Projects",
+      keywords: "portfolio category papers",
+      run: () => {
+        setSelectedCategory("Data Science");
+        goToRoute("/portfolio");
+      },
+    },
+    {
+      label: `Switch To ${theme === "dark" ? "Light" : "Dark"} Mode`,
+      keywords: "theme appearance",
+      run: () => setTheme((current) => (current === "dark" ? "light" : "dark")),
+    },
+    {
+      label: "Contact Section",
+      keywords: "reach out email",
+      run: () => goToHomeAnchor("contact"),
+    },
+    {
+      label: "Open GitHub",
+      keywords: "code repo",
+      run: () => window.open("https://github.com/ZhalaeDaneshvari", "_blank", "noopener,noreferrer"),
+    },
+    {
+      label: "Open LinkedIn",
+      keywords: "social profile",
+      run: () =>
+        window.open(
+          "https://www.linkedin.com/in/zhalae-daneshvari-9890a3241/",
+          "_blank",
+          "noopener,noreferrer"
+        ),
+    },
+  ];
+
+  const normalizedPaletteQuery = paletteQuery.trim().toLowerCase();
+  const filteredPaletteActions = commandActions.filter((action) => {
+    const haystack = `${action.label} ${action.keywords}`.toLowerCase();
+    return !normalizedPaletteQuery || haystack.includes(normalizedPaletteQuery);
+  });
+
+  const executePaletteAction = (action) => {
+    if (!action) {
+      return;
+    }
+
+    setIsPaletteOpen(false);
+    setPaletteQuery("");
+    setPaletteIndex(0);
+    action.run();
+  };
 
   useEffect(() => {
     const syncRoute = () => setRoutePath(getRouteFromLocation());
@@ -512,6 +624,59 @@ function App() {
     };
   }, [activeImage]);
 
+  useEffect(() => {
+    setPaletteIndex(0);
+  }, [paletteQuery, isPaletteOpen]);
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      const key = event.key.toLowerCase();
+
+      if ((event.metaKey || event.ctrlKey) && key === "k") {
+        event.preventDefault();
+        setIsPaletteOpen(true);
+        return;
+      }
+
+      if (!isPaletteOpen) {
+        return;
+      }
+
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setIsPaletteOpen(false);
+        return;
+      }
+
+      if (!filteredPaletteActions.length) {
+        return;
+      }
+
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        setPaletteIndex((current) => (current + 1) % filteredPaletteActions.length);
+        return;
+      }
+
+      if (event.key === "ArrowUp") {
+        event.preventDefault();
+        setPaletteIndex((current) =>
+          (current - 1 + filteredPaletteActions.length) % filteredPaletteActions.length
+        );
+        return;
+      }
+
+      if (event.key === "Enter") {
+        event.preventDefault();
+        executePaletteAction(filteredPaletteActions[paletteIndex]);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [filteredPaletteActions, isPaletteOpen, paletteIndex]);
+
   const themeIcon = theme === "dark" ? "☀" : "◐";
   const activeExperience = EXPERIENCES[carouselIndex];
   const nextExperience = EXPERIENCES[(carouselIndex + 1) % EXPERIENCES.length];
@@ -557,6 +722,14 @@ function App() {
           </ul>
         </nav>
         <div className="topbar-actions">
+          <button
+            className="command-launch"
+            type="button"
+            aria-label="Open command palette"
+            onClick={() => setIsPaletteOpen(true)}
+          >
+            Ctrl+K
+          </button>
           <a
             className="icon-link"
             href="https://www.linkedin.com/in/zhalae-daneshvari-9890a3241/"
@@ -599,6 +772,51 @@ function App() {
           </button>
         </div>
       </header>
+
+      {isPaletteOpen && (
+        <div className="command-palette" role="dialog" aria-modal="true" aria-label="Command palette">
+          <button
+            type="button"
+            className="command-palette-backdrop"
+            aria-label="Close command palette"
+            onClick={() => setIsPaletteOpen(false)}
+          ></button>
+
+          <div className="command-palette-panel">
+            <div className="command-palette-header">
+              <input
+                className="command-palette-input"
+                type="text"
+                autoFocus
+                value={paletteQuery}
+                onChange={(event) => setPaletteQuery(event.target.value)}
+                placeholder="Search actions..."
+                aria-label="Search commands"
+              />
+              <span className="command-palette-shortcut">Esc</span>
+            </div>
+
+            <div className="command-palette-list" role="listbox" aria-label="Command results">
+              {filteredPaletteActions.length ? (
+                filteredPaletteActions.map((action, index) => (
+                  <button
+                    key={action.label}
+                    type="button"
+                    className={`command-palette-item ${index === paletteIndex ? "active" : ""}`}
+                    onMouseEnter={() => setPaletteIndex(index)}
+                    onClick={() => executePaletteAction(action)}
+                  >
+                    <span>{action.label}</span>
+                    <span className="command-palette-item-hint">Enter</span>
+                  </button>
+                ))
+              ) : (
+                <p className="command-palette-empty">No commands found.</p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {!isExperiencePage && !isPortfolioPage && !isResumePage && (
         <main id="home">
@@ -691,7 +909,16 @@ function App() {
                   )
                 }
               >
-                ←
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path
+                    d="M15 5L8 12L15 19"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
               </button>
 
               <div className="experience-carousel-window">
@@ -748,7 +975,16 @@ function App() {
                   setCarouselIndex((current) => (current + 1) % EXPERIENCES.length)
                 }
               >
-                →
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path
+                    d="M9 5L16 12L9 19"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
               </button>
             </div>
             <div className="carousel-progress">
@@ -869,7 +1105,45 @@ function App() {
                 </article>
                 {index < EXPERIENCES.length - 1 && (
                   <div className={`timeline-arrow ${index % 2 === 0 ? "right" : "left"}`} aria-hidden="true">
-                    {index % 2 === 0 ? "↘" : "↙"}
+                    {index % 2 === 0 ? (
+                      <svg viewBox="0 0 24 24" className="timeline-arrow-icon" focusable="false">
+                        <path
+                          d="M5 8H15V18"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M11 14L15 18L19 14"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    ) : (
+                      <svg viewBox="0 0 24 24" className="timeline-arrow-icon" focusable="false">
+                        <path
+                          d="M19 8H9V18"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M13 14L9 18L5 14"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    )}
                   </div>
                 )}
               </Fragment>
@@ -1042,7 +1316,7 @@ function App() {
           {selectedCategory === "UX / HCI" && (
             <section className="portfolio-section reveal category-switch-enter">
               <div className="portfolio-section-header">
-                <h2>UX / HCI (3 Projects)</h2>
+                <h2>UX / HCI ({HCI_VR_PROJECTS.length} Projects)</h2>
               </div>
 
               <div className="project-grid">
@@ -1060,6 +1334,19 @@ function App() {
                       <p className="project-summary">{project.summary}</p>
                       <p className="project-details">{project.details}</p>
 
+                      {project.repoLink && (
+                        <div className="paper-links-row">
+                          <a
+                            className="paper-link"
+                            href={project.repoLink}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            Open GitHub repo
+                          </a>
+                        </div>
+                      )}
+
                       <div className="project-skills">
                         {project.tools.map((tool) => (
                           <span key={`${project.title}-${tool}`} className="skill-tag">
@@ -1068,8 +1355,9 @@ function App() {
                         ))}
                       </div>
 
-                      <div className="immersive-media-grid">
-                        {project.media.map((item, mediaIndex) => {
+                      {project.media && project.media.length > 0 && (
+                        <div className="immersive-media-grid">
+                          {project.media.map((item, mediaIndex) => {
                           const mediaKey = `${project.title}-${item.label}-${mediaIndex}`;
                           const isVideo = item.type === "video";
                           const isAutoVideo = projectIndex === 0 && mediaIndex === 1;
@@ -1132,8 +1420,9 @@ function App() {
                               </div>
                             </article>
                           );
-                        })}
-                      </div>
+                          })}
+                        </div>
+                      )}
                     </article>
                   </div>
                 ))}
