@@ -125,6 +125,21 @@ function toHashRoute(path) {
   return `${toAppPath("/")}#${path}`;
 }
 
+function toAssetPath(path) {
+  if (!path) {
+    return path;
+  }
+
+  if (/^https?:\/\//.test(path)) {
+    return path;
+  }
+
+  const trimmedBase = BASE_URL.endsWith("/") ? BASE_URL.slice(0, -1) : BASE_URL;
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+
+  return `${trimmedBase}${normalizedPath}`;
+}
+
 const AGENTIC_PROJECTS = [
   {
     title: "Molecular Data Chatbot",
@@ -683,7 +698,10 @@ function App() {
                 <article className="experience-carousel">
                   <div className="experience-logo" aria-hidden="true">
                     {activeExperience.logo ? (
-                      <img src={activeExperience.logo} alt={`${activeExperience.company} logo`} />
+                      <img
+                        src={toAssetPath(activeExperience.logo)}
+                        alt={`${activeExperience.company} logo`}
+                      />
                     ) : (
                       activeExperience.logoText
                     )}
@@ -706,7 +724,10 @@ function App() {
                 <article className="experience-preview" aria-hidden="true">
                   <div className="experience-logo">
                     {nextExperience.logo ? (
-                      <img src={nextExperience.logo} alt={`${nextExperience.company} logo`} />
+                      <img
+                        src={toAssetPath(nextExperience.logo)}
+                        alt={`${nextExperience.company} logo`}
+                      />
                     ) : (
                       nextExperience.logoText
                     )}
@@ -825,7 +846,11 @@ function App() {
                 <article className={`timeline-item reveal ${index % 2 === 0 ? "left" : "right"}`}>
                   {item.dateMark && <p className="timeline-marker">{item.dateMark}</p>}
                   <div className="timeline-node" aria-hidden="true">
-                    {item.logo ? <img src={item.logo} alt={`${item.company} logo`} /> : item.logoText}
+                    {item.logo ? (
+                      <img src={toAssetPath(item.logo)} alt={`${item.company} logo`} />
+                    ) : (
+                      item.logoText
+                    )}
                   </div>
                   <div className="timeline-card">
                     <p className="timeline-time">{item.period}</p>
@@ -933,13 +958,13 @@ function App() {
                                 className="project-shot-btn"
                                 onClick={() =>
                                   setActiveImage({
-                                    src: imagePath,
+                                    src: toAssetPath(imagePath),
                                     alt: `${project.title} screenshot ${index + 1}`,
                                   })
                                 }
                               >
                                 <img
-                                  src={imagePath}
+                                  src={toAssetPath(imagePath)}
                                   alt={`${project.title} screenshot ${index + 1}`}
                                   loading="lazy"
                                 />
