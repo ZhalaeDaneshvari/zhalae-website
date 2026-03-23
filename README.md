@@ -52,4 +52,4 @@ This site reflects how I like to build: technically rigorous, design-forward, an
 
 ## Transparency
 
-This website was coded and designed by Zhalae Daneshvari with iterative assistance from GitHub Copilot.
+This website was coded and designed by Zhalae Daneshvari with iterative assistance from GitHub Copilot. 

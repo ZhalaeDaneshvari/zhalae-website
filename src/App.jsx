@@ -413,6 +413,7 @@ function App() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add("in-view");
+            observer.unobserve(entry.target);
           }
         });
       },
@@ -425,7 +426,7 @@ function App() {
     revealElements.forEach((element) => observer.observe(element));
 
     return () => observer.disconnect();
-  }, []);
+  }, [isExperiencePage, isPortfolioPage, isResumePage, selectedCategory]);
 
   useEffect(() => {
     if (!activeImage) {
@@ -572,10 +573,6 @@ function App() {
               I am especially interested in biotechnology and building products where advanced
               modeling meets real human impact.
             </p>
-          </section>
-
-          <section id="work" className="panel reveal">
-            <h2>Focus Areas</h2>
             <div className="chips">
               <span>Agentic AI</span>
               <span>Data Science</span>
@@ -824,14 +821,14 @@ function App() {
           </section>
 
           {selectedCategory === "Agentic AI" && (
-            <section className="portfolio-section category-switch-enter">
+            <section className="portfolio-section reveal category-switch-enter">
               <div className="portfolio-section-header">
                 <h2>Agentic AI ({AGENTIC_PROJECTS.length} Projects)</h2>
               </div>
 
               <div className="project-grid">
                 {AGENTIC_PROJECTS.map((project) => (
-                  <div key={project.title} className="project-card-wrap">
+                  <div key={project.title} className="project-card-wrap reveal">
                     <article className="project-card">
                       <div className="project-meta">
                         <p className="project-date">{project.date}</p>
@@ -901,14 +898,14 @@ function App() {
           )}
 
           {selectedCategory === "Data Science" && (
-            <section className="portfolio-section category-switch-enter">
+            <section className="portfolio-section reveal category-switch-enter">
               <div className="portfolio-section-header">
                 <h2>Data Science (2 Papers)</h2>
               </div>
 
               <div className="project-grid">
                 {DATA_SCIENCE_PAPERS.map((paper) => (
-                  <div key={paper.title} className="project-card-wrap">
+                  <div key={paper.title} className="project-card-wrap reveal">
                     <article className="project-card">
                       <div className="project-meta">
                         <p className="project-date">{paper.date}</p>
@@ -960,14 +957,14 @@ function App() {
           )}
 
           {selectedCategory === "UX / HCI" && (
-            <section className="portfolio-section category-switch-enter">
+            <section className="portfolio-section reveal category-switch-enter">
               <div className="portfolio-section-header">
                 <h2>UX / HCI (3 Projects)</h2>
               </div>
 
               <div className="project-grid">
                 {HCI_VR_PROJECTS.map((project, projectIndex) => (
-                  <div key={project.title} className="project-card-wrap">
+                  <div key={project.title} className="project-card-wrap reveal">
                     <article className="project-card">
                       <div className="project-meta">
                         <p className="project-date">{project.date}</p>
@@ -1117,7 +1114,13 @@ function App() {
       )}
 
       <footer className="site-footer reveal">
-        Coded and designed by Zhalae Daneshvari and Copilot ;)
+        <span className="footer-copy">©</span> Coded and designed by Zhalae Daneshvari
+        <span className="footer-easter" aria-label="Reveal coding assistant">
+          ...
+          <span className="footer-easter-tooltip" role="note">
+            and Copilot ;)
+          </span>
+        </span>
       </footer>
     </>
   );
