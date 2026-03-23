@@ -84,9 +84,8 @@ const EXPERIENCES = [
 
 const PORTFOLIO_CATEGORIES = [
   "Agentic AI",
+  "UX / HCI",
   "Data Science",
-  "UX",
-  "Virtual Reality / HCI",
 ];
 
 const AGENTIC_PROJECTS = [
@@ -137,7 +136,162 @@ const AGENTIC_PROJECTS = [
       "/concierge/career5.png",
     ],
   },
+  {
+    title: "Cornell Trivia",
+    date: "Spring 2026",
+    clientTag: "Cornell",
+    summary:
+      "Built a Cornell-themed trivia application powered by a local LLM that generates campus-focused questions and adaptive prompts.",
+    details:
+      "Players earn coins for correct answers, unlock new trivia categories over time, and progress through a game loop designed for replayability. The project ships as a downloadable Vue app and is deployed on GitHub Pages.",
+    skills: [
+      "Local LLM",
+      "Vue.js",
+      "Game Mechanics",
+      "Prompt Design",
+      "Front-End Development",
+    ],
+    images: ["/trivia/trivia1.png", "/trivia/triva2.png", "/trivia/trivia3.png"],
+    appLink: "https://cornell-info4340-2026sp.github.io/zwd3-hw5/",
+    appCta: "Open downloadable app",
+  },
 ];
+
+const DATA_SCIENCE_PAPERS = [
+  {
+    title: "Mapping the Payoff: How Major, College, and Region Shape Career Salaries",
+    date: "May 2025",
+    clientTag: "Research Paper",
+    summary:
+      "This paper examines what drives salary outcomes 10 years after graduation, comparing the influence of major, college, and region using PayScale data reported by The Wall Street Journal.",
+    details:
+      "The analysis investigates long-term salary trajectories across growth-oriented vs. starting-salary majors, institutional context, and geography to better understand how early academic decisions shape mid-career earnings.",
+    questions: [
+      "How strongly do region and college selection influence mid-career salary outcomes?",
+      "How do growth-focused majors compare with majors optimized for strong starting salaries?",
+    ],
+    skills: ["Data Analysis", "Statistical Modeling", "Economic Research", "Data Storytelling"],
+    paperLink: "https://drive.google.com/file/d/1v1p3aKT06gCFtwVlmwllphqxXPmSwEyB/view",
+  },
+  {
+    title: "Food Access and Equity: Socioeconomic Patterns in New York's Grocery Landscape",
+    date: "December 2024",
+    clientTag: "Research Paper",
+    summary:
+      "This project studies grocery store accessibility across New York State census tracts and evaluates how access patterns align with income levels and racial composition.",
+    details:
+      "The goal is to identify potential food access disparities and quantify whether socioeconomic factors are associated with systematically different levels of grocery availability.",
+    questions: [
+      "How does grocery accessibility vary across income brackets in New York census tracts?",
+      "Are there significant disparities in store access across different racial groups?",
+    ],
+    skills: ["Geospatial Analysis", "Socioeconomic Data", "Equity Research", "Policy-Oriented Analytics"],
+    paperLink: "https://drive.google.com/file/d/1oiE8DfdLMhOMyO07Z-zN5zF85gkssIKS/view",
+  },
+];
+
+const HCI_VR_PROJECTS = [
+  {
+    title: "Enhancing Bimodal Communication with AI-Powered Glasses for English and ASL",
+    date: "May 2025",
+    clientTag: "HCI Research",
+    summary:
+      "A smart-glasses communication system designed to improve real-time interactions between Deaf and Hard-of-Hearing individuals and non-signers in dynamic settings.",
+    details:
+      "The system integrates speech recognition with LLM-assisted language support to enable responsive ASL-English communication workflows in two directions.",
+    tools: ["HCI Research", "Speech Recognition", "LLMs", "Assistive AI", "ASL-English UX"],
+    media: [
+      {
+        type: "paper",
+        label: "Research Paper",
+        link: "https://drive.google.com/file/d/1awgh9TZpuktGHnLq0IdYjsCudAaVMGnM/view",
+      },
+      {
+        type: "video",
+        label: "Prototype Demo Video 1",
+        link: "https://youtu.be/tUS1OrU_qn8",
+      },
+      {
+        type: "video",
+        label: "Prototype Demo Video 2",
+        link: "https://youtu.be/tUS1OrU_qn8",
+      },
+    ],
+  },
+  {
+    title: "IFF Interactive House",
+    date: "July 2024",
+    clientTag: "Company: IFF",
+    summary:
+      "An interactive VR house for the IFF Sales team, built with leadership partners to communicate product innovations in an immersive format.",
+    details:
+      "Users explore a realistic log cabin environment, trigger innovation hotspots, and move through teleported scenes to view USP-aligned content and video storytelling moments.",
+    tools: ["Unity", "Blender", "C#", "Meta Quest 3", "Immersive Product Storytelling"],
+    media: [
+      {
+        type: "video",
+        label: "Project Walkthrough",
+        link: "https://youtu.be/GeEoqTAGlDc",
+      },
+    ],
+  },
+  {
+    title: "Low Poly World",
+    date: "July 2024",
+    clientTag: "Virtual Reality",
+    summary:
+      "A first independently built VR world featuring traversable terrain, interactive objects, mini-games, and environment-driven exploration.",
+    details:
+      "Created during Summer 2024 at International Flavors & Fragrances, this project combines low-poly scene design with interaction mechanics such as tools, target-hitting tasks, and bowling.",
+    tools: ["Unity", "Blender", "C#", "Interaction Design", "Environment Design"],
+    media: [
+      {
+        type: "video",
+        label: "Gameplay Demo",
+        link: "https://youtu.be/zI_AZu5-kAs",
+      },
+    ],
+  },
+];
+
+function toGoogleDrivePreviewUrl(url) {
+  const match = url.match(/\/file\/d\/([^/]+)/);
+  return match ? `https://drive.google.com/file/d/${match[1]}/preview` : url;
+}
+
+function getYouTubeVideoId(url) {
+  const shortMatch = url.match(/youtu\.be\/([^?&/]+)/);
+  if (shortMatch) {
+    return shortMatch[1];
+  }
+
+  const longMatch = url.match(/[?&]v=([^?&/]+)/);
+  if (longMatch) {
+    return longMatch[1];
+  }
+
+  return "";
+}
+
+function toYouTubeEmbedUrl(url, { autoplay = false, muted = true } = {}) {
+  const videoId = getYouTubeVideoId(url);
+  if (!videoId) {
+    return url;
+  }
+
+  const params = new URLSearchParams({
+    rel: "0",
+    iv_load_policy: "3",
+    fs: "1",
+    disablekb: "0",
+    controls: "1",
+    playsinline: "1",
+    autoplay: autoplay ? "1" : "0",
+    mute: muted ? "1" : "0",
+  });
+
+  return `https://www.youtube-nocookie.com/embed/${videoId}?${params.toString()}`;
+}
 
 function TypewriterText({ text, className, speed = 22, startDelay = 140 }) {
   const [rendered, setRendered] = useState("");
@@ -190,6 +344,8 @@ function App() {
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [isCarouselPaused, setIsCarouselPaused] = useState(false);
   const [activeImage, setActiveImage] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState("Agentic AI");
+  const [hoveredVideoKey, setHoveredVideoKey] = useState("");
   const isExperiencePage = window.location.pathname.startsWith("/experience");
   const isPortfolioPage = window.location.pathname.startsWith("/portfolio");
 
@@ -650,70 +806,257 @@ function App() {
             />
             <div className="portfolio-categories">
               {PORTFOLIO_CATEGORIES.map((category) => (
-                <span
+                <button
                   key={category}
-                  className={`category-pill ${category === "Agentic AI" ? "active" : ""}`}
+                  type="button"
+                  className={`category-pill ${category === selectedCategory ? "active" : ""}`}
+                  onClick={() => setSelectedCategory(category)}
+                  aria-pressed={category === selectedCategory}
                 >
                   {category}
-                </span>
+                </button>
               ))}
             </div>
           </section>
 
-          <section className="portfolio-section reveal">
-            <div className="portfolio-section-header">
-              <h2>Agentic AI (2 Projects)</h2>
-            </div>
+          {selectedCategory === "Agentic AI" && (
+            <section className="portfolio-section category-switch-enter">
+              <div className="portfolio-section-header">
+                <h2>Agentic AI ({AGENTIC_PROJECTS.length} Projects)</h2>
+              </div>
 
-            <div className="project-grid">
-              {AGENTIC_PROJECTS.map((project, index) => (
-                <div key={project.title} className="project-card-wrap reveal">
-                  <article className="project-card">
-                    <div className="project-meta">
-                      <p className="project-date">{project.date}</p>
-                      <div className="project-title-row">
-                        <h3>{project.title}</h3>
-                        {project.clientTag && (
-                          <span className="project-client-pill">{project.clientTag}</span>
-                        )}
+              <div className="project-grid">
+                {AGENTIC_PROJECTS.map((project) => (
+                  <div key={project.title} className="project-card-wrap">
+                    <article className="project-card">
+                      <div className="project-meta">
+                        <p className="project-date">{project.date}</p>
+                        <div className="project-title-row">
+                          <h3>{project.title}</h3>
+                          {project.clientTag && (
+                            <span className="project-client-pill">{project.clientTag}</span>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                    <p className="project-summary">{project.summary}</p>
-                    <p className="project-details">{project.details}</p>
-                    <div className="project-skills">
-                      {project.skills.map((skill) => (
-                        <span key={`${project.title}-${skill}`} className="skill-tag">
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-                    <div className="project-gallery">
-                      {project.images.map((imagePath, index) => (
-                        <figure key={`${project.title}-${imagePath}`} className="project-shot">
-                          <button
-                            type="button"
-                            className="project-shot-btn"
-                            onClick={() =>
-                              setActiveImage({
-                                src: imagePath,
-                                alt: `${project.title} screenshot ${index + 1}`,
-                              })
-                            }
+                      <p className="project-summary">{project.summary}</p>
+                      <p className="project-details">{project.details}</p>
+                      {project.appLink && (
+                        <div className="project-link-row">
+                          <a
+                            className="paper-link project-app-link"
+                            href={project.appLink}
+                            target="_blank"
+                            rel="noreferrer"
                           >
-                            <img
-                              src={imagePath}
-                              alt={`${project.title} screenshot ${index + 1}`}
-                              loading="lazy"
-                            />
-                          </button>
-                        </figure>
-                      ))}
-                    </div>
-                  </article>
-                </div>
-              ))}
-            </div>
-          </section>
+                            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                              <path
+                                fill="currentColor"
+                                d="M12 3a1 1 0 0 1 1 1v8.59l2.3-2.3a1 1 0 1 1 1.4 1.42l-4 3.99a1 1 0 0 1-1.4 0l-4-3.99a1 1 0 1 1 1.4-1.42l2.3 2.3V4a1 1 0 0 1 1-1Zm-7 12a1 1 0 0 1 1 1v2h12v-2a1 1 0 1 1 2 0v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1Z"
+                              />
+                            </svg>
+                            {project.appCta || "Open app"}
+                          </a>
+                        </div>
+                      )}
+                      <div className="project-skills">
+                        {project.skills.map((skill) => (
+                          <span key={`${project.title}-${skill}`} className="skill-tag">
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                      {project.images && project.images.length > 0 && (
+                        <div className="project-gallery">
+                          {project.images.map((imagePath, index) => (
+                            <figure key={`${project.title}-${imagePath}`} className="project-shot">
+                              <button
+                                type="button"
+                                className="project-shot-btn"
+                                onClick={() =>
+                                  setActiveImage({
+                                    src: imagePath,
+                                    alt: `${project.title} screenshot ${index + 1}`,
+                                  })
+                                }
+                              >
+                                <img
+                                  src={imagePath}
+                                  alt={`${project.title} screenshot ${index + 1}`}
+                                  loading="lazy"
+                                />
+                              </button>
+                            </figure>
+                          ))}
+                        </div>
+                      )}
+                    </article>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {selectedCategory === "Data Science" && (
+            <section className="portfolio-section category-switch-enter">
+              <div className="portfolio-section-header">
+                <h2>Data Science (2 Papers)</h2>
+              </div>
+
+              <div className="project-grid">
+                {DATA_SCIENCE_PAPERS.map((paper) => (
+                  <div key={paper.title} className="project-card-wrap">
+                    <article className="project-card">
+                      <div className="project-meta">
+                        <p className="project-date">{paper.date}</p>
+                        <div className="project-title-row">
+                          <h3>{paper.title}</h3>
+                          <span className="project-client-pill">{paper.clientTag}</span>
+                        </div>
+                      </div>
+                      <p className="project-summary">{paper.summary}</p>
+                      <p className="project-details">{paper.details}</p>
+                      <ul className="paper-questions">
+                        {paper.questions.map((question) => (
+                          <li key={`${paper.title}-${question}`}>{question}</li>
+                        ))}
+                      </ul>
+                      <div className="project-skills">
+                        {paper.skills.map((skill) => (
+                          <span key={`${paper.title}-${skill}`} className="skill-tag">
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+
+                      <div className="pdf-preview-wrap">
+                        <iframe
+                          src={toGoogleDrivePreviewUrl(paper.paperLink)}
+                          title={`${paper.title} PDF preview`}
+                          className="pdf-preview"
+                          loading="lazy"
+                          allow="autoplay"
+                        ></iframe>
+                      </div>
+
+                      <div className="paper-links-row">
+                        <a
+                          className="paper-link"
+                          href={paper.paperLink}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          Open full paper
+                        </a>
+                      </div>
+                    </article>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {selectedCategory === "UX / HCI" && (
+            <section className="portfolio-section category-switch-enter">
+              <div className="portfolio-section-header">
+                <h2>UX / HCI (3 Projects)</h2>
+              </div>
+
+              <div className="project-grid">
+                {HCI_VR_PROJECTS.map((project, projectIndex) => (
+                  <div key={project.title} className="project-card-wrap">
+                    <article className="project-card">
+                      <div className="project-meta">
+                        <p className="project-date">{project.date}</p>
+                        <div className="project-title-row">
+                          <h3>{project.title}</h3>
+                          <span className="project-client-pill">{project.clientTag}</span>
+                        </div>
+                      </div>
+
+                      <p className="project-summary">{project.summary}</p>
+                      <p className="project-details">{project.details}</p>
+
+                      <div className="project-skills">
+                        {project.tools.map((tool) => (
+                          <span key={`${project.title}-${tool}`} className="skill-tag">
+                            {tool}
+                          </span>
+                        ))}
+                      </div>
+
+                      <div className="immersive-media-grid">
+                        {project.media.map((item, mediaIndex) => {
+                          const mediaKey = `${project.title}-${item.label}-${mediaIndex}`;
+                          const isVideo = item.type === "video";
+                          const isAutoVideo = projectIndex === 0 && mediaIndex === 1;
+                          const shouldAutoPlay = isVideo && (hoveredVideoKey === mediaKey || isAutoVideo);
+
+                          return (
+                            <article
+                              key={mediaKey}
+                              className={`media-card ${isVideo ? "media-card-video" : "media-card-paper"}`}
+                              onMouseEnter={() => {
+                                if (isVideo) {
+                                  setHoveredVideoKey(mediaKey);
+                                }
+                              }}
+                              onMouseLeave={() => {
+                                if (isVideo) {
+                                  setHoveredVideoKey("");
+                                }
+                              }}
+                            >
+                              <div className="media-card-header">
+                                <p>{item.label}</p>
+                                {isVideo && <span className="media-hint">Hover to play</span>}
+                              </div>
+
+                              <div className="media-frame-wrap">
+                                {isVideo ? (
+                                  <iframe
+                                    src={toYouTubeEmbedUrl(item.link, {
+                                      autoplay: shouldAutoPlay,
+                                      muted: true,
+                                    })}
+                                    title={`${project.title} ${item.label}`}
+                                    className="media-frame"
+                                    loading="lazy"
+                                    referrerPolicy="strict-origin-when-cross-origin"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    allowFullScreen
+                                  ></iframe>
+                                ) : (
+                                  <iframe
+                                    src={toGoogleDrivePreviewUrl(item.link)}
+                                    title={`${project.title} ${item.label}`}
+                                    className="media-frame"
+                                    loading="lazy"
+                                    allow="autoplay"
+                                  ></iframe>
+                                )}
+                              </div>
+
+                              <div className="paper-links-row">
+                                <a
+                                  className="paper-link"
+                                  href={item.link}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                >
+                                  {isVideo ? "Open video" : "Open paper"}
+                                </a>
+                              </div>
+                            </article>
+                          );
+                        })}
+                      </div>
+                    </article>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
         </main>
       )}
 

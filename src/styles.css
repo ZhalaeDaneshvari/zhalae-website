@@ -702,12 +702,22 @@ h2 {
 }
 
 .category-pill {
+  appearance: none;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  font: inherit;
   border: 1px solid var(--border);
   border-radius: 999px;
   padding: 0.4rem 0.8rem;
   color: var(--muted);
   background: color-mix(in srgb, var(--surface) 85%, var(--bg) 15%);
   font-size: 0.84rem;
+  transition: border-color 220ms ease, background-color 220ms ease, transform 220ms ease, color 220ms ease;
+}
+
+.category-pill:hover {
+  border-color: var(--lime);
+  transform: translateY(-1px);
 }
 
 .category-pill.active {
@@ -716,8 +726,16 @@ h2 {
   background: var(--lime-soft);
 }
 
+.empty-category-card {
+  margin-top: 0.4rem;
+}
+
 .portfolio-section {
   margin-top: 1.2rem;
+}
+
+.category-switch-enter {
+  animation: category-switch-in 320ms ease both;
 }
 
 .portfolio-section-header {
@@ -799,6 +817,17 @@ h2 {
   line-height: 1.62;
 }
 
+.paper-questions {
+  margin: 0.75rem 0 0;
+  padding-left: 1.05rem;
+  color: var(--text);
+}
+
+.paper-questions li {
+  margin: 0.35rem 0;
+  line-height: 1.5;
+}
+
 .project-skills {
   margin-top: 0.9rem;
   display: flex;
@@ -815,6 +844,119 @@ h2 {
   overflow-x: auto;
   padding-bottom: 0.2rem;
   scrollbar-width: thin;
+}
+
+.pdf-preview-wrap {
+  margin-top: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--surface) 92%, var(--bg) 8%);
+}
+
+.pdf-preview {
+  display: block;
+  width: 100%;
+  height: min(62vh, 560px);
+  border: 0;
+}
+
+.paper-links-row {
+  margin-top: 0.75rem;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.paper-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  text-decoration: none;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.42rem 0.8rem;
+  color: var(--text);
+  transition: border-color 220ms ease, background-color 220ms ease, transform 220ms ease;
+}
+
+.paper-link:hover {
+  border-color: var(--lime);
+  background: var(--lime-soft);
+  transform: translateY(-1px);
+}
+
+.project-link-row {
+  margin-top: 0.9rem;
+}
+
+.project-app-link svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+.immersive-media-grid {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.media-card {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 0.7rem;
+  background: color-mix(in srgb, var(--surface) 90%, var(--bg) 10%);
+  transition: border-color 220ms ease, transform 220ms ease, box-shadow 220ms ease;
+}
+
+.media-card:hover {
+  border-color: color-mix(in srgb, var(--lime) 50%, var(--border) 50%);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
+}
+
+.media-card-paper {
+  grid-column: 1 / -1;
+}
+
+.media-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.55rem;
+}
+
+.media-card-header p {
+  margin: 0;
+  font-size: 0.88rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.media-hint {
+  font-size: 0.74rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.16rem 0.5rem;
+  color: var(--muted);
+  background: color-mix(in srgb, var(--surface) 80%, var(--bg) 20%);
+}
+
+.media-frame-wrap {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #111;
+}
+
+.media-frame {
+  display: block;
+  width: 100%;
+  height: min(52vh, 380px);
+  border: 0;
 }
 
 .project-shot {
@@ -1142,6 +1284,17 @@ h2 {
   }
 }
 
+@keyframes category-switch-in {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
 @media (max-width: 700px) {
   .nav-links {
     gap: 0.75rem;
@@ -1222,6 +1375,18 @@ h2 {
     grid-auto-columns: 86%;
   }
 
+  .immersive-media-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pdf-preview {
+    height: 58vh;
+  }
+
+  .media-frame {
+    height: 44vh;
+  }
+
   .timeline::before {
     display: none;
   }
@@ -1270,6 +1435,10 @@ h2 {
   .reveal {
     opacity: 1;
     transform: none;
+  }
+
+  .category-switch-enter {
+    animation: none;
   }
 
   .orb,
