@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Redirecting...</title>
+    <script>
+      (function () {
+        var repoBase = "/zhalae-website";
+        var path = window.location.pathname;
+        var pathWithoutBase = path.startsWith(repoBase)
+          ? path.slice(repoBase.length)
+          : path;
+
+        var target = repoBase + "/#" + (pathWithoutBase || "/") + window.location.search;
+        window.location.replace(target);
+      })();
+    </script>
+  </head>
+  <body></body>
+</html>

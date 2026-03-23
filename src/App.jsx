@@ -91,6 +91,40 @@ const PORTFOLIO_CATEGORIES = [
 const RESUME_LINK =
   "https://drive.google.com/file/d/1HpSQOGvpWFIShFzYyREy32gHvc1vmYNi/view?usp=sharing";
 
+const BASE_URL = import.meta.env.BASE_URL || "/";
+const BASE_PATH = BASE_URL === "/" ? "" : BASE_URL.replace(/\/$/, "");
+
+function toAppPath(path) {
+  if (path === "/") {
+    return BASE_PATH || "/";
+  }
+
+  return `${BASE_PATH}${path}`;
+}
+
+function getRoutePath(pathname) {
+  if (BASE_PATH && pathname.startsWith(BASE_PATH)) {
+    const stripped = pathname.slice(BASE_PATH.length);
+    return stripped || "/";
+  }
+
+  return pathname;
+}
+
+function getRouteFromLocation() {
+  const hash = window.location.hash;
+
+  if (hash.startsWith("#/")) {
+    return hash.slice(1);
+  }
+
+  return getRoutePath(window.location.pathname);
+}
+
+function toHashRoute(path) {
+  return `${toAppPath("/")}#${path}`;
+}
+
 const AGENTIC_PROJECTS = [
   {
     title: "Molecular Data Chatbot",
@@ -349,9 +383,22 @@ function App() {
   const [activeImage, setActiveImage] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("Agentic AI");
   const [hoveredVideoKey, setHoveredVideoKey] = useState("");
-  const isExperiencePage = window.location.pathname.startsWith("/experience");
-  const isPortfolioPage = window.location.pathname.startsWith("/portfolio");
-  const isResumePage = window.location.pathname.startsWith("/resume");
+  const [routePath, setRoutePath] = useState(() => getRouteFromLocation());
+  const isExperiencePage = routePath.startsWith("/experience");
+  const isPortfolioPage = routePath.startsWith("/portfolio");
+  const isResumePage = routePath.startsWith("/resume");
+
+  useEffect(() => {
+    const syncRoute = () => setRoutePath(getRouteFromLocation());
+
+    window.addEventListener("hashchange", syncRoute);
+    window.addEventListener("popstate", syncRoute);
+
+    return () => {
+      window.removeEventListener("hashchange", syncRoute);
+      window.removeEventListener("popstate", syncRoute);
+    };
+  }, []);
 
   useEffect(() => {
     document.body.setAttribute("data-theme", theme);
@@ -464,22 +511,33 @@ function App() {
       </div>
 
       <header className="topbar">
-        <a className="brand" href={isExperiencePage || isPortfolioPage || isResumePage ? "/" : "#home"}>
+        <a
+          className="brand"
+          href={isExperiencePage || isPortfolioPage || isResumePage ? toAppPath("/") : "#home"}
+        >
           ZD
         </a>
         <nav>
           <ul className="nav-links">
             <li>
-              <a href={isExperiencePage || isPortfolioPage || isResumePage ? "/#home" : "#home"}>Home</a>
+              <a
+                href={
+                  isExperiencePage || isPortfolioPage || isResumePage
+                    ? `${toAppPath("/")}#home`
+                    : "#home"
+                }
+              >
+                Home
+              </a>
             </li>
             <li>
-              <a href="/portfolio">Portfolio</a>
+              <a href={toHashRoute("/portfolio")}>Portfolio</a>
             </li>
             <li>
-              <a href="/experience">Experience</a>
+              <a href={toHashRoute("/experience")}>Experience</a>
             </li>
             <li>
-              <a href="/resume">Resume</a>
+              <a href={toHashRoute("/resume")}>Resume</a>
             </li>
           </ul>
         </nav>
@@ -550,7 +608,7 @@ function App() {
               creative engineering and thoughtful design.
             </p>
             <div className="hero-actions">
-              <a className="btn btn-primary" href="/portfolio">
+              <a className="btn btn-primary" href={toHashRoute("/portfolio")}>
                 View Portfolio
               </a>
               <a className="btn btn-ghost" href="#contact">
@@ -599,7 +657,7 @@ function App() {
           <section id="experience" className="panel reveal">
             <div className="experience-header">
               <h2>Experience</h2>
-              <a className="see-more-link" href="/experience">
+              <a className="see-more-link" href={toHashRoute("/experience")}>
                 See More
               </a>
             </div>
@@ -741,7 +799,7 @@ function App() {
               speed={18}
             />
             <div className="experience-hero-actions">
-              <a className="btn btn-primary" href="/">
+              <a className="btn btn-primary" href={toAppPath("/")}>
                 Back To Home
               </a>
               <a
@@ -1071,7 +1129,7 @@ function App() {
               <a className="btn btn-primary" href={RESUME_LINK} target="_blank" rel="noreferrer">
                 Open Resume
               </a>
-              <a className="btn btn-ghost" href="/">
+              <a className="btn btn-ghost" href={toAppPath("/")}>
                 Back To Home
               </a>
             </div>
