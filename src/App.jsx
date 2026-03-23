@@ -89,7 +89,7 @@ const PORTFOLIO_CATEGORIES = [
 ];
 
 const RESUME_LINK =
-  "https://drive.google.com/file/d/1HpSQOGvpWFIShFzYyREy32gHvc1vmYNi/view?usp=sharing";
+  "https://drive.google.com/file/d/1wJXdz9DhP-0oiM1rDmjpX38l3BMESqjj/view?usp=sharing";
 
 const BASE_URL = import.meta.env.BASE_URL || "/";
 const BASE_PATH = BASE_URL === "/" ? "" : BASE_URL.replace(/\/$/, "");
