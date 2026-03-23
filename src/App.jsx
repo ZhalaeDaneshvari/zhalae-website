@@ -82,6 +82,99 @@ const EXPERIENCES = [
   },
 ];
 
+const PORTFOLIO_CATEGORIES = [
+  "Agentic AI",
+  "Data Science",
+  "UX",
+  "Virtual Reality / HCI",
+];
+
+const AGENTIC_PROJECTS = [
+  {
+    title: "Molecular Data Chatbot",
+    date: "May 2025",
+    clientTag: "Johnson & Johnson",
+    summary:
+      "Architected an agentic AI system for pharmacovigilance that reasons in both directions: from molecular structure to adverse-event risk, and from safety targets back to candidate analogs. The pipeline blends vector embeddings, Tanimoto fingerprint similarity, and regression-based ranking to surface low-risk alternatives from SMILES input.",
+    details:
+      "Integrated ChEMBL, PubChem, and FAERS through API orchestration and data extraction workflows, then used RDKit, BigQuery, and Pandas for descriptor engineering and molecular fingerprints. Deployed cloud-native inference on GCP (Cloud Functions + GCS) with a public HTTP endpoint for real-time product integration.",
+    skills: [
+      "Agentic AI",
+      "Vertex AI ADK",
+      "RDKit",
+      "BigQuery",
+      "Pandas",
+      "Cloud Functions",
+      "Pharmacovigilance",
+    ],
+    images: [
+      "/molecular/molecular%201.jpg",
+      "/molecular/molecular%202.jpg",
+      "/molecular/molecular%203.jpg",
+    ],
+  },
+  {
+    title: "Career Concierge",
+    date: "December 2025",
+    clientTag: "Cornell",
+    summary:
+      "Built an interactive career co-pilot that helps students move from resume upload to application-ready materials in a single guided flow. Users receive a role-fit score, evidence-backed alignment summary, skill-gap analysis, tailored cover letter draft, and contextual advising via an interactive assistant.",
+    details:
+      "Designed for trust and speed: all analysis is session-scoped with no persistent data storage. The experience prioritizes clarity, immediate feedback loops, and actionable next steps so users can iterate quickly on applications with confidence.",
+    skills: [
+      "NLP",
+      "Resume Parsing",
+      "Prompt Engineering",
+      "Product UX",
+      "Interactive Chat",
+      "Privacy by Design",
+    ],
+    images: [
+      "/concierge/career1.png",
+      "/concierge/career2.png",
+      "/concierge/career3.png",
+      "/concierge/career4.png",
+      "/concierge/career5.png",
+    ],
+  },
+];
+
+function TypewriterText({ text, className, speed = 22, startDelay = 140 }) {
+  const [rendered, setRendered] = useState("");
+
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (prefersReducedMotion) {
+      setRendered(text);
+      return undefined;
+    }
+
+    let index = 0;
+    let timeoutId;
+
+    const typeNext = () => {
+      setRendered(text.slice(0, index));
+
+      if (index < text.length) {
+        index += 1;
+        timeoutId = window.setTimeout(typeNext, speed);
+      }
+    };
+
+    timeoutId = window.setTimeout(typeNext, startDelay);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [text, speed, startDelay]);
+
+  return (
+    <p className={className}>
+      {rendered}
+      <span className="typing-inline-cursor" aria-hidden="true"></span>
+    </p>
+  );
+}
+
 function App() {
   const [theme, setTheme] = useState(() => {
     const savedTheme = localStorage.getItem("theme");
@@ -96,7 +189,9 @@ function App() {
   const [typedName, setTypedName] = useState("");
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [isCarouselPaused, setIsCarouselPaused] = useState(false);
+  const [activeImage, setActiveImage] = useState(null);
   const isExperiencePage = window.location.pathname.startsWith("/experience");
+  const isPortfolioPage = window.location.pathname.startsWith("/portfolio");
 
   useEffect(() => {
     document.body.setAttribute("data-theme", theme);
@@ -114,7 +209,7 @@ function App() {
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    if (prefersReducedMotion || isCarouselPaused || isExperiencePage) {
+    if (prefersReducedMotion || isCarouselPaused || isExperiencePage || isPortfolioPage) {
       return undefined;
     }
 
@@ -123,7 +218,7 @@ function App() {
     }, 3800);
 
     return () => window.clearInterval(interval);
-  }, [isCarouselPaused, isExperiencePage]);
+  }, [isCarouselPaused, isExperiencePage, isPortfolioPage]);
 
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -172,6 +267,28 @@ function App() {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    if (!activeImage) {
+      document.body.style.overflow = "";
+      return undefined;
+    }
+
+    document.body.style.overflow = "hidden";
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        setActiveImage(null);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [activeImage]);
+
   const themeIcon = theme === "dark" ? "☀" : "◐";
   const activeExperience = EXPERIENCES[carouselIndex];
   const nextExperience = EXPERIENCES[(carouselIndex + 1) % EXPERIENCES.length];
@@ -186,22 +303,22 @@ function App() {
       </div>
 
       <header className="topbar">
-        <a className="brand" href={isExperiencePage ? "/" : "#home"}>
+        <a className="brand" href={isExperiencePage || isPortfolioPage ? "/" : "#home"}>
           ZD
         </a>
         <nav>
           <ul className="nav-links">
             <li>
-              <a href={isExperiencePage ? "/#home" : "#home"}>Home</a>
+              <a href={isExperiencePage || isPortfolioPage ? "/#home" : "#home"}>Home</a>
             </li>
             <li>
-              <a href={isExperiencePage ? "/#work" : "#work"}>Work</a>
+              <a href="/portfolio">Portfolio</a>
             </li>
             <li>
               <a href="/experience">Experience</a>
             </li>
             <li>
-              <a href={isExperiencePage ? "/#contact" : "#contact"}>Contact</a>
+              <a href={isExperiencePage || isPortfolioPage ? "/#contact" : "#contact"}>Contact</a>
             </li>
           </ul>
         </nav>
@@ -249,7 +366,7 @@ function App() {
         </div>
       </header>
 
-      {!isExperiencePage && (
+      {!isExperiencePage && !isPortfolioPage && (
         <main id="home">
           <section className="hero reveal">
             <p className="eyebrow">Personal Website</p>
@@ -272,8 +389,8 @@ function App() {
               creative engineering and thoughtful design.
             </p>
             <div className="hero-actions">
-              <a className="btn btn-primary" href="#work">
-                View Work
+              <a className="btn btn-primary" href="/portfolio">
+                View Portfolio
               </a>
               <a className="btn btn-ghost" href="#contact">
                 Get In Touch
@@ -461,10 +578,11 @@ function App() {
           <section className="experience-hero reveal">
             <p className="eyebrow">Experience Timeline</p>
             <h1>Professional Experience</h1>
-            <p className="subtitle">
-              A detailed look at internships, research, and product work across machine
-              learning, UX, and interactive technology.
-            </p>
+            <TypewriterText
+              className="subtitle"
+              text="A detailed look at internships, research, and product work across machine learning, UX, and interactive technology."
+              speed={18}
+            />
             <div className="experience-hero-actions">
               <a className="btn btn-primary" href="/">
                 Back To Home
@@ -518,6 +636,107 @@ function App() {
             ))}
           </section>
         </main>
+      )}
+
+      {isPortfolioPage && (
+        <main className="portfolio-page">
+          <section className="portfolio-hero reveal">
+            <p className="eyebrow">Selected Work</p>
+            <h1>Portfolio</h1>
+            <TypewriterText
+              className="subtitle"
+              text="A cross-disciplinary project archive spanning agentic AI, data science, UX, and immersive computing."
+              speed={18}
+            />
+            <div className="portfolio-categories">
+              {PORTFOLIO_CATEGORIES.map((category) => (
+                <span
+                  key={category}
+                  className={`category-pill ${category === "Agentic AI" ? "active" : ""}`}
+                >
+                  {category}
+                </span>
+              ))}
+            </div>
+          </section>
+
+          <section className="portfolio-section reveal">
+            <div className="portfolio-section-header">
+              <h2>Agentic AI (2 Projects)</h2>
+            </div>
+
+            <div className="project-grid">
+              {AGENTIC_PROJECTS.map((project, index) => (
+                <div key={project.title} className="project-card-wrap reveal">
+                  <article className="project-card">
+                    <div className="project-meta">
+                      <p className="project-date">{project.date}</p>
+                      <div className="project-title-row">
+                        <h3>{project.title}</h3>
+                        {project.clientTag && (
+                          <span className="project-client-pill">{project.clientTag}</span>
+                        )}
+                      </div>
+                    </div>
+                    <p className="project-summary">{project.summary}</p>
+                    <p className="project-details">{project.details}</p>
+                    <div className="project-skills">
+                      {project.skills.map((skill) => (
+                        <span key={`${project.title}-${skill}`} className="skill-tag">
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                    <div className="project-gallery">
+                      {project.images.map((imagePath, index) => (
+                        <figure key={`${project.title}-${imagePath}`} className="project-shot">
+                          <button
+                            type="button"
+                            className="project-shot-btn"
+                            onClick={() =>
+                              setActiveImage({
+                                src: imagePath,
+                                alt: `${project.title} screenshot ${index + 1}`,
+                              })
+                            }
+                          >
+                            <img
+                              src={imagePath}
+                              alt={`${project.title} screenshot ${index + 1}`}
+                              loading="lazy"
+                            />
+                          </button>
+                        </figure>
+                      ))}
+                    </div>
+                  </article>
+                </div>
+              ))}
+            </div>
+          </section>
+        </main>
+      )}
+
+      {activeImage && (
+        <div className="image-modal" role="dialog" aria-modal="true" aria-label="Expanded project image">
+          <button
+            type="button"
+            className="image-modal-backdrop"
+            aria-label="Close image preview"
+            onClick={() => setActiveImage(null)}
+          ></button>
+          <div className="image-modal-content">
+            <img src={activeImage.src} alt={activeImage.alt} />
+            <button
+              type="button"
+              className="image-modal-close"
+              aria-label="Close image preview"
+              onClick={() => setActiveImage(null)}
+            >
+              ×
+            </button>
+          </div>
+        </div>
       )}
 
       <footer className="site-footer reveal">
