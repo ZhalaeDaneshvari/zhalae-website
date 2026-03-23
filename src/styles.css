@@ -683,6 +683,36 @@ h2 {
   padding: clamp(2.2rem, 8vw, 5rem) 0 4rem;
 }
 
+.resume-page {
+  width: min(1100px, 92vw);
+  margin: 0 auto;
+  padding: clamp(2.2rem, 8vw, 5rem) 0 4rem;
+}
+
+.resume-hero {
+  margin-bottom: 1rem;
+}
+
+.resume-actions {
+  display: flex;
+  gap: 0.72rem;
+  flex-wrap: wrap;
+}
+
+.resume-preview-wrap {
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--surface) 90%, var(--bg) 10%);
+}
+
+.resume-preview-frame {
+  display: block;
+  width: 100%;
+  height: min(78vh, 980px);
+  border: 0;
+}
+
 .portfolio-page {
   width: min(1140px, 94vw);
   margin: 0 auto;
@@ -1385,6 +1415,10 @@ h2 {
 
   .media-frame {
     height: 44vh;
+  }
+
+  .resume-preview-frame {
+    height: 66vh;
   }
 
   .timeline::before {

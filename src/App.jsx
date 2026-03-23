@@ -88,6 +88,9 @@ const PORTFOLIO_CATEGORIES = [
   "Data Science",
 ];
 
+const RESUME_LINK =
+  "https://drive.google.com/file/d/1HpSQOGvpWFIShFzYyREy32gHvc1vmYNi/view?usp=sharing";
+
 const AGENTIC_PROJECTS = [
   {
     title: "Molecular Data Chatbot",
@@ -348,6 +351,7 @@ function App() {
   const [hoveredVideoKey, setHoveredVideoKey] = useState("");
   const isExperiencePage = window.location.pathname.startsWith("/experience");
   const isPortfolioPage = window.location.pathname.startsWith("/portfolio");
+  const isResumePage = window.location.pathname.startsWith("/resume");
 
   useEffect(() => {
     document.body.setAttribute("data-theme", theme);
@@ -459,13 +463,13 @@ function App() {
       </div>
 
       <header className="topbar">
-        <a className="brand" href={isExperiencePage || isPortfolioPage ? "/" : "#home"}>
+        <a className="brand" href={isExperiencePage || isPortfolioPage || isResumePage ? "/" : "#home"}>
           ZD
         </a>
         <nav>
           <ul className="nav-links">
             <li>
-              <a href={isExperiencePage || isPortfolioPage ? "/#home" : "#home"}>Home</a>
+              <a href={isExperiencePage || isPortfolioPage || isResumePage ? "/#home" : "#home"}>Home</a>
             </li>
             <li>
               <a href="/portfolio">Portfolio</a>
@@ -474,7 +478,7 @@ function App() {
               <a href="/experience">Experience</a>
             </li>
             <li>
-              <a href={isExperiencePage || isPortfolioPage ? "/#contact" : "#contact"}>Contact</a>
+              <a href="/resume">Resume</a>
             </li>
           </ul>
         </nav>
@@ -522,7 +526,7 @@ function App() {
         </div>
       </header>
 
-      {!isExperiencePage && !isPortfolioPage && (
+      {!isExperiencePage && !isPortfolioPage && !isResumePage && (
         <main id="home">
           <section className="hero reveal">
             <p className="eyebrow">Personal Website</p>
@@ -1057,6 +1061,36 @@ function App() {
             </section>
           )}
 
+        </main>
+      )}
+
+      {isResumePage && (
+        <main className="resume-page">
+          <section className="resume-hero reveal">
+            <p className="eyebrow">Resume</p>
+            <h1>Resume Preview</h1>
+            <TypewriterText className="subtitle" text="View my latest resume below." speed={18} />
+            <div className="resume-actions">
+              <a className="btn btn-primary" href={RESUME_LINK} target="_blank" rel="noreferrer">
+                Open Resume
+              </a>
+              <a className="btn btn-ghost" href="/">
+                Back To Home
+              </a>
+            </div>
+          </section>
+
+          <section className="panel reveal">
+            <div className="resume-preview-wrap">
+              <iframe
+                src={toGoogleDrivePreviewUrl(RESUME_LINK)}
+                title="Resume preview"
+                className="resume-preview-frame"
+                loading="lazy"
+                referrerPolicy="strict-origin-when-cross-origin"
+              ></iframe>
+            </div>
+          </section>
         </main>
       )}
 
