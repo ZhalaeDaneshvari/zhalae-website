@@ -389,7 +389,7 @@ function App() {
       return savedTheme;
     }
 
-    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    return "dark";
   });
   const [roleIndex, setRoleIndex] = useState(0);
   const [typedName, setTypedName] = useState("");
@@ -619,7 +619,7 @@ function App() {
               </span>
             </h1>
             <p className="subtitle">
-              Developer building elegant digital experiences at Cornell University with a focus on
+              Developer and designer building digital experiences at Cornell University with a focus on
               creative engineering and thoughtful design.
             </p>
             <div className="hero-actions">
@@ -633,16 +633,16 @@ function App() {
           </section>
 
           <section id="about" className="panel reveal">
-            <h2>About Me</h2>
+            <h2>About Me.</h2>
             <p>
               I am Zhalae, a developer and designer at Cornell University focused on data
-              science, UX, and interactive technology. I completed my Bachelor&apos;s in
-              Information Science in May 2026 and I am currently finishing my Master&apos;s in
+              science, UX, and interactive technology. I will complete my Bachelor&apos;s in
+              Information Science in May 2026 and finish my Master&apos;s in
               Information Science in December 2026.
             </p>
             <p>
               My work spans agentic AI for molecular risk analysis, cloud-native machine
-              learning systems, and VR healthcare simulations shaped by behavioral research.
+              learning systems, VR healthcare simulations shaped by behavioral research, and more.
               I am especially interested in biotechnology and building products where advanced
               modeling meets real human impact.
             </p>

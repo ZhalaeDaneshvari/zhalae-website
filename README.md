@@ -1,8 +1,11 @@
 # Zhalae Daneshvari Personal Website
 
-A recruiter-ready personal website built with React and Vite.
+Personal website built with React and Vite.
 
-This site is intentionally minimal in color but expressive in motion: clean black-and-white foundations, lime accents, subtle ambient animation, and responsive layouts that hold up on both desktop and mobile.
+## Live Site
+
+- https://zhalaedaneshvari.github.io/zhalae-website/
+
 
 ## Why I Built It This Way
 
@@ -44,9 +47,16 @@ npm run build
 npm run preview
 ```
 
+## Deployment
+
+This project is deployed with GitHub Pages using a GitHub Actions workflow.
+
+- Workflow file: `.github/workflows/deploy-pages.yml`
+- Deploy trigger: push to `main`
+
 ## Personal Note
 
-I wrapped up my Bachelor's in Information Science at Cornell in May 2026 and I am finishing my Master's in Information Science in December 2026.
+I will wrap up my Bachelor's in Information Science at Cornell in May 2026 and while simultaneously finishing my Master's in Information Science in December 2026.
 
 This site reflects how I like to build: technically rigorous, design-forward, and focused on real-world impact.
 
