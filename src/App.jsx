@@ -13,6 +13,7 @@ const EXPERIENCES = [
     logoText: "J&J",
     logo: "/jnj.png",
     skills: ["Digital Health", "Biosensors", "Data Analytics"],
+    filters: ["Data Science"],
   },
   {
     company: "Cornell Bowers",
@@ -24,6 +25,7 @@ const EXPERIENCES = [
     logoText: "CB",
     logo: "/bowers.jpeg",
     skills: ["React", "Express.js", "MongoDB", "UX/UI", "Teaching"],
+    filters: ["UX"],
   },
   {
     company: "Virtual Embodiment Lab",
@@ -35,6 +37,7 @@ const EXPERIENCES = [
     logoText: "VEL",
     logo: "/vel.jpeg",
     skills: ["Unity", "VR", "Experimental Design", "Human Perception"],
+    filters: ["UX"],
   },
   {
     company: "Design + Augmented Intelligence Lab",
@@ -46,6 +49,7 @@ const EXPERIENCES = [
     logoText: "DAIL",
     logo: "/dail.png",
     skills: ["Python", "VR Research", "Healthcare UX", "Data Analysis"],
+    filters: ["Data Science", "UX"],
   },
   {
     company: "Johnson & Johnson",
@@ -57,6 +61,7 @@ const EXPERIENCES = [
     logoText: "J&J",
     logo: "/jnj.png",
     skills: ["Agentic AI", "Vertex AI", "GCP", "Similarity Modeling"],
+    filters: ["Data Science"],
   },
   {
     company: "International Flavors & Fragrances",
@@ -68,6 +73,7 @@ const EXPERIENCES = [
     logoText: "IFF",
     logo: "/iff.png",
     skills: ["Unity", "C#", "AngularJS", "PostgreSQL", "LLMs"],
+    filters: ["UX"],
   },
   {
     company: "Albers Lab - Mass General Hospital",
@@ -79,6 +85,7 @@ const EXPERIENCES = [
     logoText: "MGH",
     logo: "/mgh.jpeg",
     skills: ["R", "Python", "EHR Data", "Computational Biology"],
+    filters: ["Data Science"],
   },
 ];
 
@@ -142,6 +149,7 @@ function toAssetPath(path) {
 
 const AGENTIC_PROJECTS = [
   {
+    anchorId: "molecular-data-chatbot",
     title: "Molecular Data Chatbot",
     date: "May 2025",
     clientTag: "Johnson & Johnson",
@@ -414,9 +422,10 @@ function App() {
   const [paletteQuery, setPaletteQuery] = useState("");
   const [paletteIndex, setPaletteIndex] = useState(0);
   const [routePath, setRoutePath] = useState(() => getRouteFromLocation());
-  const isExperiencePage = routePath.startsWith("/experience");
-  const isPortfolioPage = routePath.startsWith("/portfolio");
-  const isResumePage = routePath.startsWith("/resume");
+  const [routePathname, routeQuery = ""] = routePath.split("?");
+  const isExperiencePage = routePathname.startsWith("/experience");
+  const isPortfolioPage = routePathname.startsWith("/portfolio");
+  const isResumePage = routePathname.startsWith("/resume");
 
   const goToHomeAnchor = (anchor) => {
     window.location.assign(`${toAppPath("/")}#${anchor}`);
@@ -526,6 +535,33 @@ function App() {
       window.removeEventListener("popstate", syncRoute);
     };
   }, []);
+
+  useEffect(() => {
+    const params = new URLSearchParams(routeQuery);
+    const categoryParam = params.get("category");
+
+    if (categoryParam && PORTFOLIO_CATEGORIES.includes(categoryParam)) {
+      setSelectedCategory(categoryParam);
+    }
+  }, [routeQuery]);
+
+  useEffect(() => {
+    const params = new URLSearchParams(routeQuery);
+    const focusId = params.get("focus");
+
+    if (!focusId) {
+      return undefined;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      document.getElementById(focusId)?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }, 120);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [routeQuery, selectedCategory]);
 
   useEffect(() => {
     document.body.setAttribute("data-theme", theme);
@@ -865,11 +901,25 @@ function App() {
               modeling meets real human impact.
             </p>
             <div className="chips">
-              <span>Agentic AI</span>
-              <span>Data Science</span>
-              <span>Machine Learning</span>
-              <span>UX Design</span>
-              <span>Biotech Applications</span>
+              <a href={toHashRoute("/portfolio?category=Agentic%20AI&focus=agentic-ai-section")}>
+                Agentic AI
+              </a>
+              <a href={toHashRoute("/portfolio?category=Data%20Science&focus=data-science-section")}>
+                Data Science
+              </a>
+              <a href={toHashRoute("/portfolio?category=Data%20Science&focus=data-science-section")}>
+                Machine Learning
+              </a>
+              <a href={toHashRoute("/portfolio?category=UX%20%2F%20HCI&focus=ux-hci-section")}>
+                UX Design
+              </a>
+              <a
+                href={toHashRoute(
+                  "/portfolio?category=Agentic%20AI&focus=molecular-data-chatbot"
+                )}
+              >
+                Biotech Applications
+              </a>
             </div>
             <a
               className="repo-link"
@@ -1178,14 +1228,18 @@ function App() {
           </section>
 
           {selectedCategory === "Agentic AI" && (
-            <section className="portfolio-section reveal category-switch-enter">
+            <section id="agentic-ai-section" className="portfolio-section reveal category-switch-enter">
               <div className="portfolio-section-header">
                 <h2>Agentic AI ({AGENTIC_PROJECTS.length} Projects)</h2>
               </div>
 
               <div className="project-grid">
                 {AGENTIC_PROJECTS.map((project) => (
-                  <div key={project.title} className="project-card-wrap reveal">
+                  <div
+                    key={project.title}
+                    id={project.anchorId || undefined}
+                    className="project-card-wrap reveal"
+                  >
                     <article className="project-card">
                       <div className="project-meta">
                         <p className="project-date">{project.date}</p>
@@ -1255,7 +1309,7 @@ function App() {
           )}
 
           {selectedCategory === "Data Science" && (
-            <section className="portfolio-section reveal category-switch-enter">
+            <section id="data-science-section" className="portfolio-section reveal category-switch-enter">
               <div className="portfolio-section-header">
                 <h2>Data Science (2 Papers)</h2>
               </div>
@@ -1314,7 +1368,7 @@ function App() {
           )}
 
           {selectedCategory === "UX / HCI" && (
-            <section className="portfolio-section reveal category-switch-enter">
+            <section id="ux-hci-section" className="portfolio-section reveal category-switch-enter">
               <div className="portfolio-section-header">
                 <h2>UX / HCI ({HCI_VR_PROJECTS.length} Projects)</h2>
               </div>
