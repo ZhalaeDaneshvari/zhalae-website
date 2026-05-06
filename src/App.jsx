@@ -90,6 +90,7 @@ const EXPERIENCES = [
 ];
 
 const PORTFOLIO_CATEGORIES = [
+  "All Projects",
   "Agentic AI",
   "UX / HCI",
   "Data Science",
@@ -171,6 +172,39 @@ const AGENTIC_PROJECTS = [
       "/molecular/molecular%202.jpg",
       "/molecular/molecular%203.jpg",
     ],
+  },
+  {
+    title: "Reframe",
+    date: "Spring 2026",
+    clientTag: "Personal Project",
+    summary:
+      "A personal reflection app for students who are carrying a lot mentally but don't always feel ready to talk to someone else. Reframe gives users a private, low-pressure space to pause, reflect, and better understand what they're feeling.",
+    details:
+      "Users start a session, select an emotional focus (stressed, anxious, overwhelmed, or sad), then reflect via voice or text. The app generates a personalized emotional reflection that helps users process their thoughts, recognize what may be driving those emotions, and reframe them in a more grounded way. Reflections are saved across sessions, and after multiple entries the app unlocks long-term insights surfacing emotional patterns, repeated thought loops, and trends over time. Deployed as a Progressive Web App (PWA) on GitHub Pages.",
+    skills: [
+      "Agentic AI",
+      "PWA",
+      "Voice Input",
+      "Emotional Intelligence",
+      "Long-Term Insights",
+      "GitHub Pages",
+    ],
+    video: "/reframe/reframe-demo.mp4",
+    images: [
+      "/reframe/reframe-1.png",
+      "/reframe/reframe-2.png",
+      "/reframe/reframe-3.png",
+      "/reframe/reframe-4.png",
+      "/reframe/reframe-5.png",
+      "/reframe/reframe-6.png",
+      "/reframe/reframe-7.png",
+      "/reframe/reframe-8.png",
+      "/reframe/reframe-9.png",
+      "/reframe/reframe-10.png",
+    ],
+    appLink: "https://zhalaedaneshvari.github.io/reframe/",
+    appCta: "Open app",
+    githubLink: "https://github.com/ZhalaeDaneshvari/reframe",
   },
   {
     title: "Career Concierge",
@@ -262,11 +296,6 @@ const HCI_VR_PROJECTS = [
     tools: ["HCI Research", "Speech Recognition", "LLMs", "Assistive AI", "ASL-English UX"],
     media: [
       {
-        type: "paper",
-        label: "Research Paper",
-        link: "https://drive.google.com/file/d/1awgh9TZpuktGHnLq0IdYjsCudAaVMGnM/view",
-      },
-      {
         type: "video",
         label: "Prototype Demo Video 1",
         link: "https://youtu.be/tUS1OrU_qn8",
@@ -274,7 +303,12 @@ const HCI_VR_PROJECTS = [
       {
         type: "video",
         label: "Prototype Demo Video 2",
-        link: "https://youtu.be/tUS1OrU_qn8",
+        link: "https://youtu.be/aULpH_YSJWo",
+      },
+      {
+        type: "paper",
+        label: "Research Paper",
+        link: "https://drive.google.com/file/d/1awgh9TZpuktGHnLq0IdYjsCudAaVMGnM/view",
       },
     ],
   },
@@ -322,6 +356,7 @@ const HCI_VR_PROJECTS = [
       "Designed and built this site to showcase work across AI, UX/HCI, and research while keeping the experience fast, responsive, and a little playful.",
     tools: ["React", "Vite", "JavaScript", "CSS", "Responsive Design", "GitHub Pages"],
     repoLink: "https://github.com/ZhalaeDaneshvari/zhalae-website",
+    previewImage: "/portfolio/website-home.png",
     media: [],
   },
 ];
@@ -363,6 +398,11 @@ function toYouTubeEmbedUrl(url, { autoplay = false, muted = true } = {}) {
   });
 
   return `https://www.youtube-nocookie.com/embed/${videoId}?${params.toString()}`;
+}
+
+function toYouTubeThumbnailUrl(url) {
+  const videoId = getYouTubeVideoId(url);
+  return videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : "";
 }
 
 function TypewriterText({ text, className, speed = 22, startDelay = 140 }) {
@@ -416,8 +456,9 @@ function App() {
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [isCarouselPaused, setIsCarouselPaused] = useState(false);
   const [activeImage, setActiveImage] = useState(null);
-  const [selectedCategory, setSelectedCategory] = useState("Agentic AI");
-  const [hoveredVideoKey, setHoveredVideoKey] = useState("");
+  const [expandedProject, setExpandedProject] = useState(null);
+  const [detailImageIndex, setDetailImageIndex] = useState(0);
+  const [selectedCategory, setSelectedCategory] = useState("All Projects");
   const [isPaletteOpen, setIsPaletteOpen] = useState(false);
   const [paletteQuery, setPaletteQuery] = useState("");
   const [paletteIndex, setPaletteIndex] = useState(0);
@@ -455,6 +496,14 @@ function App() {
       label: "Open Resume",
       keywords: "cv",
       run: () => goToRoute("/resume"),
+    },
+    {
+      label: "Show All Portfolio Projects",
+      keywords: "portfolio category all",
+      run: () => {
+        setSelectedCategory("All Projects");
+        goToRoute("/portfolio");
+      },
     },
     {
       label: "Show Agentic AI Projects",
@@ -636,7 +685,48 @@ function App() {
     revealElements.forEach((element) => observer.observe(element));
 
     return () => observer.disconnect();
-  }, [isExperiencePage, isPortfolioPage, isResumePage, selectedCategory]);
+  }, [isExperiencePage, isPortfolioPage, isResumePage, selectedCategory, expandedProject]);
+
+  useEffect(() => {
+    setDetailImageIndex(0);
+  }, [expandedProject?.title]);
+
+  useEffect(() => {
+    const slideCount = (expandedProject?.video ? 1 : 0) + (expandedProject?.images?.length || 0);
+
+    if (!isPortfolioPage || !expandedProject || slideCount <= 1 || activeImage || isPaletteOpen) {
+      return undefined;
+    }
+
+    const handleCarouselKeys = (event) => {
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        setDetailImageIndex((current) => (current + 1) % slideCount);
+        return;
+      }
+
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        setDetailImageIndex((current) => (current - 1 + slideCount) % slideCount);
+        return;
+      }
+
+      if (event.key === "Home") {
+        event.preventDefault();
+        setDetailImageIndex(0);
+        return;
+      }
+
+      if (event.key === "End") {
+        event.preventDefault();
+        setDetailImageIndex(slideCount - 1);
+      }
+    };
+
+    window.addEventListener("keydown", handleCarouselKeys);
+
+    return () => window.removeEventListener("keydown", handleCarouselKeys);
+  }, [activeImage, expandedProject, isPaletteOpen, isPortfolioPage]);
 
   useEffect(() => {
     if (!activeImage) {
@@ -1204,30 +1294,278 @@ function App() {
 
       {isPortfolioPage && (
         <main className="portfolio-page">
-          <section className="portfolio-hero reveal">
-            <p className="eyebrow">Selected Work</p>
-            <h1>Portfolio</h1>
-            <TypewriterText
-              className="subtitle"
-              text="A cross-disciplinary project archive spanning agentic AI, data science, UX, and immersive computing."
-              speed={18}
-            />
-            <div className="portfolio-categories">
-              {PORTFOLIO_CATEGORIES.map((category) => (
-                <button
-                  key={category}
-                  type="button"
-                  className={`category-pill ${category === selectedCategory ? "active" : ""}`}
-                  onClick={() => setSelectedCategory(category)}
-                  aria-pressed={category === selectedCategory}
-                >
-                  {category}
-                </button>
-              ))}
-            </div>
-          </section>
+          {!expandedProject && (
+            <section className="portfolio-hero reveal">
+              <p className="eyebrow">Selected Work</p>
+              <h1>Portfolio</h1>
+              <TypewriterText
+                className="subtitle"
+                text="A cross-disciplinary project archive spanning agentic AI, data science, UX, and immersive computing."
+                speed={18}
+              />
+              <div className="portfolio-categories">
+                {PORTFOLIO_CATEGORIES.map((category) => (
+                  <button
+                    key={category}
+                    type="button"
+                    className={`category-pill ${category === selectedCategory ? "active" : ""}`}
+                    onClick={() => {
+                      setSelectedCategory(category);
+                      setExpandedProject(null);
+                    }}
+                    aria-pressed={category === selectedCategory}
+                  >
+                    {category}
+                  </button>
+                ))}
+              </div>
+            </section>
+          )}
 
-          {selectedCategory === "Agentic AI" && (
+          {expandedProject && (
+            <section className="project-detail-page">
+              <div className="project-detail-topbar">
+                <button
+                  type="button"
+                  className="paper-link project-detail-back"
+                  onClick={() => setExpandedProject(null)}
+                >
+                  ← Back to {selectedCategory}
+                </button>
+              </div>
+
+              <div className="project-detail-layout">
+                <aside className="project-detail-copy">
+                  <p className="project-date">{expandedProject.date}</p>
+                  <div className="project-title-row">
+                    <h2>{expandedProject.title}</h2>
+                    {expandedProject.clientTag && (
+                      <span className="project-client-pill">{expandedProject.clientTag}</span>
+                    )}
+                  </div>
+                  <p className="project-summary">{expandedProject.summary}</p>
+                  {expandedProject.details && (
+                    <p className="project-details">{expandedProject.details}</p>
+                  )}
+
+                  {expandedProject.questions && expandedProject.questions.length > 0 && (
+                    <ul className="paper-questions">
+                      {expandedProject.questions.map((question) => (
+                        <li key={`${expandedProject.title}-${question}`}>{question}</li>
+                      ))}
+                    </ul>
+                  )}
+
+                  {(expandedProject.appLink || expandedProject.githubLink || expandedProject.paperLink || expandedProject.repoLink) && (
+                    <div className="project-link-row">
+                      {expandedProject.appLink && (
+                        <a className="paper-link project-app-link" href={expandedProject.appLink} target="_blank" rel="noreferrer">
+                          {expandedProject.appCta || "Open app"}
+                        </a>
+                      )}
+                      {expandedProject.githubLink && (
+                        <a className="paper-link project-app-link" href={expandedProject.githubLink} target="_blank" rel="noreferrer">
+                          View on GitHub
+                        </a>
+                      )}
+                      {expandedProject.paperLink && (
+                        <a className="paper-link project-app-link" href={expandedProject.paperLink} target="_blank" rel="noreferrer">
+                          Open full paper
+                        </a>
+                      )}
+                      {expandedProject.repoLink && (
+                        <a className="paper-link project-app-link" href={expandedProject.repoLink} target="_blank" rel="noreferrer">
+                          Open GitHub repo
+                        </a>
+                      )}
+                    </div>
+                  )}
+
+                  <div className="project-skills">
+                    {(expandedProject.skills || []).map((skill) => (
+                      <span key={`${expandedProject.title}-${skill}`} className="skill-tag">
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </aside>
+
+                <div className="project-detail-media">
+                  {expandedProject.paperLink && (
+                    <figure className="project-shot project-shot--video project-shot--lead">
+                      <iframe
+                        src={toGoogleDrivePreviewUrl(expandedProject.paperLink)}
+                        title={`${expandedProject.title} PDF preview`}
+                        className={`pdf-preview ${expandedProject.category === "Data Science" ? "pdf-preview--long" : ""}`}
+                        loading="lazy"
+                        allow="autoplay"
+                      ></iframe>
+                    </figure>
+                  )}
+
+                  {expandedProject.media && expandedProject.media.length > 0 && (
+                    <div className="immersive-media-grid project-detail-immersive">
+                      {expandedProject.media.map((item, mediaIndex) => {
+                        const isVideo = item.type === "video";
+
+                        return (
+                          <article
+                            key={`${expandedProject.title}-${item.label}-${mediaIndex}`}
+                            className={`media-card ${isVideo ? "media-card-video" : "media-card-paper"}`}
+                          >
+                            <div className="media-card-header">
+                              <p>{item.label}</p>
+                            </div>
+
+                            <div className="media-frame-wrap">
+                              {isVideo ? (
+                                <iframe
+                                  src={toYouTubeEmbedUrl(item.link, {
+                                    autoplay: mediaIndex === 0,
+                                    muted: true,
+                                  })}
+                                  title={`${expandedProject.title} ${item.label}`}
+                                  className="media-frame"
+                                  loading="lazy"
+                                  referrerPolicy="strict-origin-when-cross-origin"
+                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                  allowFullScreen
+                                ></iframe>
+                              ) : (
+                                <iframe
+                                  src={toGoogleDrivePreviewUrl(item.link)}
+                                  title={`${expandedProject.title} ${item.label}`}
+                                  className="media-frame"
+                                  loading="lazy"
+                                  allow="autoplay"
+                                ></iframe>
+                              )}
+                            </div>
+
+                            <div className="paper-links-row">
+                              <a className="paper-link" href={item.link} target="_blank" rel="noreferrer">
+                                {isVideo ? "Open video" : "Open paper"}
+                              </a>
+                            </div>
+                          </article>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  {(() => {
+                    const detailSlides = [
+                      ...(expandedProject.video
+                        ? [{ type: "video", src: expandedProject.video, label: "Demo video" }]
+                        : []),
+                      ...((expandedProject.images || []).map((imagePath, index) => ({
+                        type: "image",
+                        src: imagePath,
+                        label: `Screenshot ${index + 1}`,
+                      }))),
+                    ];
+
+                    if (!detailSlides.length) {
+                      return null;
+                    }
+
+                    const activeSlide = detailSlides[detailImageIndex] || detailSlides[0];
+
+                    return (
+                      <section className="project-carousel" aria-label={`${expandedProject.title} media carousel`}>
+                        <figure className="project-shot project-shot--carousel-main">
+                          {activeSlide.type === "video" ? (
+                            <video
+                              src={toAssetPath(activeSlide.src)}
+                              controls
+                              autoPlay
+                              muted
+                              playsInline
+                              className="project-video project-video--carousel"
+                            />
+                          ) : (
+                            <button
+                              type="button"
+                              className="project-shot-btn"
+                              onClick={() =>
+                                setActiveImage({
+                                  src: toAssetPath(activeSlide.src),
+                                  alt: `${expandedProject.title} ${activeSlide.label.toLowerCase()}`,
+                                })
+                              }
+                            >
+                              <img
+                                src={toAssetPath(activeSlide.src)}
+                                alt={`${expandedProject.title} ${activeSlide.label.toLowerCase()}`}
+                                loading="lazy"
+                              />
+                            </button>
+                          )}
+
+                          {detailSlides.length > 1 && (
+                            <>
+                              <button
+                                type="button"
+                                className="carousel-nav carousel-nav--prev"
+                                onClick={() =>
+                                  setDetailImageIndex((current) =>
+                                    current === 0 ? detailSlides.length - 1 : current - 1
+                                  )
+                                }
+                                aria-label="Previous slide"
+                              >
+                                ‹
+                              </button>
+                              <button
+                                type="button"
+                                className="carousel-nav carousel-nav--next"
+                                onClick={() =>
+                                  setDetailImageIndex((current) =>
+                                    current === detailSlides.length - 1 ? 0 : current + 1
+                                  )
+                                }
+                                aria-label="Next slide"
+                              >
+                                ›
+                              </button>
+                            </>
+                          )}
+                        </figure>
+
+                        {detailSlides.length > 1 && (
+                          <div className="project-carousel-thumbs" role="tablist" aria-label="Choose media slide">
+                            {detailSlides.map((slide, index) => (
+                              <button
+                                key={`thumb-${expandedProject.title}-${slide.type}-${slide.src}`}
+                                type="button"
+                                className={`project-thumb ${index === detailImageIndex ? "active" : ""}`}
+                                onClick={() => setDetailImageIndex(index)}
+                                aria-label={`Show ${slide.label.toLowerCase()}`}
+                                aria-pressed={index === detailImageIndex}
+                              >
+                                {slide.type === "video" ? (
+                                  <span className="project-thumb-video">▶ Video</span>
+                                ) : (
+                                  <img
+                                    src={toAssetPath(slide.src)}
+                                    alt=""
+                                    aria-hidden="true"
+                                    loading="lazy"
+                                  />
+                                )}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </section>
+                    );
+                  })()}
+                </div>
+              </div>
+            </section>
+          )}
+
+          {!expandedProject && (selectedCategory === "Agentic AI" || selectedCategory === "All Projects") && (
             <section id="agentic-ai-section" className="portfolio-section reveal category-switch-enter">
               <div className="portfolio-section-header">
                 <h2>Agentic AI ({AGENTIC_PROJECTS.length} Projects)</h2>
@@ -1238,77 +1576,64 @@ function App() {
                   <div
                     key={project.title}
                     id={project.anchorId || undefined}
-                    className="project-card-wrap reveal"
+                    className="project-card-wrap"
                   >
-                    <article className="project-card">
-                      <div className="project-meta">
-                        <p className="project-date">{project.date}</p>
-                        <div className="project-title-row">
-                          <h3>{project.title}</h3>
-                          {project.clientTag && (
-                            <span className="project-client-pill">{project.clientTag}</span>
+                    <button
+                      type="button"
+                      className="project-card project-card--preview project-card--agentic"
+                      onClick={() =>
+                        setExpandedProject({
+                          ...project,
+                          category: "Agentic AI",
+                          skills: project.skills || [],
+                        })
+                      }
+                      aria-label={`View details for ${project.title}`}
+                    >
+                      {(project.video || (project.images && project.images.length > 0)) && (
+                        <div className="project-card-thumb">
+                          <img
+                            src={toAssetPath(project.images?.[0] || "/molecular/molecular%201.jpg")}
+                            alt=""
+                            aria-hidden="true"
+                            loading="lazy"
+                          />
+                          {project.video && (
+                            <span className="project-card-video-badge">▶ Video</span>
                           )}
                         </div>
-                      </div>
-                      <p className="project-summary">{project.summary}</p>
-                      <p className="project-details">{project.details}</p>
-                      {project.appLink && (
-                        <div className="project-link-row">
-                          <a
-                            className="paper-link project-app-link"
-                            href={project.appLink}
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                              <path
-                                fill="currentColor"
-                                d="M12 3a1 1 0 0 1 1 1v8.59l2.3-2.3a1 1 0 1 1 1.4 1.42l-4 3.99a1 1 0 0 1-1.4 0l-4-3.99a1 1 0 1 1 1.4-1.42l2.3 2.3V4a1 1 0 0 1 1-1Zm-7 12a1 1 0 0 1 1 1v2h12v-2a1 1 0 1 1 2 0v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1Z"
-                              />
-                            </svg>
-                            {project.appCta || "Open app"}
-                          </a>
-                        </div>
                       )}
-                      <div className="project-skills">
-                        {project.skills.map((skill) => (
-                          <span key={`${project.title}-${skill}`} className="skill-tag">
-                            {skill}
-                          </span>
-                        ))}
-                      </div>
-                      {project.images && project.images.length > 0 && (
-                        <div className="project-gallery">
-                          {project.images.map((imagePath, index) => (
-                            <figure key={`${project.title}-${imagePath}`} className="project-shot">
-                              <button
-                                type="button"
-                                className="project-shot-btn"
-                                onClick={() =>
-                                  setActiveImage({
-                                    src: toAssetPath(imagePath),
-                                    alt: `${project.title} screenshot ${index + 1}`,
-                                  })
-                                }
-                              >
-                                <img
-                                  src={toAssetPath(imagePath)}
-                                  alt={`${project.title} screenshot ${index + 1}`}
-                                  loading="lazy"
-                                />
-                              </button>
-                            </figure>
+                      <div className="project-card-body">
+                        <div className="project-meta">
+                          <p className="project-date">{project.date}</p>
+                          <div className="project-title-row">
+                            <h3>{project.title}</h3>
+                            {project.clientTag && (
+                              <span className="project-client-pill">{project.clientTag}</span>
+                            )}
+                          </div>
+                        </div>
+                        <p className="project-summary project-summary--clamp">{project.summary}</p>
+                        <div className="project-skills">
+                          {project.skills.slice(0, 4).map((skill) => (
+                            <span key={`${project.title}-${skill}`} className="skill-tag">
+                              {skill}
+                            </span>
                           ))}
+                          {project.skills.length > 4 && (
+                            <span className="skill-tag skill-tag--more">+{project.skills.length - 4}</span>
+                          )}
                         </div>
-                      )}
-                    </article>
+                        <span className="project-card-cta">View project →</span>
+                      </div>
+                    </button>
                   </div>
                 ))}
               </div>
             </section>
           )}
 
-          {selectedCategory === "Data Science" && (
+          {!expandedProject && (selectedCategory === "Data Science" || selectedCategory === "All Projects") && (
             <section id="data-science-section" className="portfolio-section reveal category-switch-enter">
               <div className="portfolio-section-header">
                 <h2>Data Science (2 Papers)</h2>
@@ -1316,168 +1641,130 @@ function App() {
 
               <div className="project-grid">
                 {DATA_SCIENCE_PAPERS.map((paper) => (
-                  <div key={paper.title} className="project-card-wrap reveal">
-                    <article className="project-card">
-                      <div className="project-meta">
-                        <p className="project-date">{paper.date}</p>
-                        <div className="project-title-row">
-                          <h3>{paper.title}</h3>
-                          <span className="project-client-pill">{paper.clientTag}</span>
-                        </div>
-                      </div>
-                      <p className="project-summary">{paper.summary}</p>
-                      <p className="project-details">{paper.details}</p>
-                      <ul className="paper-questions">
-                        {paper.questions.map((question) => (
-                          <li key={`${paper.title}-${question}`}>{question}</li>
-                        ))}
-                      </ul>
-                      <div className="project-skills">
-                        {paper.skills.map((skill) => (
-                          <span key={`${paper.title}-${skill}`} className="skill-tag">
-                            {skill}
-                          </span>
-                        ))}
-                      </div>
-
-                      <div className="pdf-preview-wrap">
+                  <div key={paper.title} className="project-card-wrap">
+                    <button
+                      type="button"
+                      className="project-card project-card--preview"
+                      onClick={() =>
+                        setExpandedProject({
+                          ...paper,
+                          category: "Data Science",
+                          skills: paper.skills || [],
+                        })
+                      }
+                      aria-label={`View details for ${paper.title}`}
+                    >
+                      <div className="project-card-thumb project-card-thumb--paper">
                         <iframe
                           src={toGoogleDrivePreviewUrl(paper.paperLink)}
-                          title={`${paper.title} PDF preview`}
-                          className="pdf-preview"
+                          title={`${paper.title} preview`}
+                          className="project-card-paper-frame"
                           loading="lazy"
                           allow="autoplay"
                         ></iframe>
                       </div>
-
-                      <div className="paper-links-row">
-                        <a
-                          className="paper-link"
-                          href={paper.paperLink}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          Open full paper
-                        </a>
+                      <div className="project-card-body">
+                        <div className="project-meta">
+                          <p className="project-date">{paper.date}</p>
+                          <div className="project-title-row">
+                            <h3>{paper.title}</h3>
+                            <span className="project-client-pill">{paper.clientTag}</span>
+                          </div>
+                        </div>
+                        <p className="project-summary project-summary--clamp">{paper.summary}</p>
+                        <div className="project-skills">
+                          {paper.skills.slice(0, 4).map((skill) => (
+                            <span key={`${paper.title}-${skill}`} className="skill-tag">
+                              {skill}
+                            </span>
+                          ))}
+                          {paper.skills.length > 4 && (
+                            <span className="skill-tag skill-tag--more">+{paper.skills.length - 4}</span>
+                          )}
+                        </div>
+                        <span className="project-card-cta">Read paper details →</span>
                       </div>
-                    </article>
+                    </button>
                   </div>
                 ))}
               </div>
             </section>
           )}
 
-          {selectedCategory === "UX / HCI" && (
+          {!expandedProject && (selectedCategory === "UX / HCI" || selectedCategory === "All Projects") && (
             <section id="ux-hci-section" className="portfolio-section reveal category-switch-enter">
               <div className="portfolio-section-header">
                 <h2>UX / HCI ({HCI_VR_PROJECTS.length} Projects)</h2>
               </div>
 
               <div className="project-grid">
-                {HCI_VR_PROJECTS.map((project, projectIndex) => (
-                  <div key={project.title} className="project-card-wrap reveal">
-                    <article className="project-card">
-                      <div className="project-meta">
-                        <p className="project-date">{project.date}</p>
-                        <div className="project-title-row">
-                          <h3>{project.title}</h3>
-                          <span className="project-client-pill">{project.clientTag}</span>
-                        </div>
+                {HCI_VR_PROJECTS.map((project) => (
+                  <div key={project.title} className="project-card-wrap">
+                    <button
+                      type="button"
+                      className="project-card project-card--preview"
+                      onClick={() =>
+                        setExpandedProject({
+                          ...project,
+                          category: "UX / HCI",
+                          skills: project.tools || [],
+                        })
+                      }
+                      aria-label={`View details for ${project.title}`}
+                    >
+                      <div className="project-card-thumb">
+                        {project.media && project.media[0]?.type === "video" ? (
+                          <>
+                            <img
+                              src={toYouTubeThumbnailUrl(project.media[0].link)}
+                              alt=""
+                              aria-hidden="true"
+                              loading="lazy"
+                            />
+                            <span className="project-card-video-badge">▶ Video</span>
+                          </>
+                        ) : project.media && project.media[0]?.type === "paper" ? (
+                          <iframe
+                            src={toGoogleDrivePreviewUrl(project.media[0].link)}
+                            title={`${project.title} preview`}
+                            className="project-card-paper-frame"
+                            loading="lazy"
+                            allow="autoplay"
+                          ></iframe>
+                        ) : project.previewImage ? (
+                          <img
+                            src={toAssetPath(project.previewImage)}
+                            alt={`${project.title} homepage preview`}
+                            loading="lazy"
+                          />
+                        ) : (
+                          <div className="project-card-fallback">Project Preview</div>
+                        )}
                       </div>
 
-                      <p className="project-summary">{project.summary}</p>
-                      <p className="project-details">{project.details}</p>
-
-                      {project.repoLink && (
-                        <div className="paper-links-row">
-                          <a
-                            className="paper-link"
-                            href={project.repoLink}
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            Open GitHub repo
-                          </a>
+                      <div className="project-card-body">
+                        <div className="project-meta">
+                          <p className="project-date">{project.date}</p>
+                          <div className="project-title-row">
+                            <h3>{project.title}</h3>
+                            <span className="project-client-pill">{project.clientTag}</span>
+                          </div>
                         </div>
-                      )}
 
-                      <div className="project-skills">
-                        {project.tools.map((tool) => (
-                          <span key={`${project.title}-${tool}`} className="skill-tag">
-                            {tool}
-                          </span>
-                        ))}
+                        <p className="project-summary project-summary--clamp">{project.summary}</p>
+                        <div className="project-skills">
+                          {project.tools.slice(0, 4).map((tool) => (
+                            <span key={`${project.title}-${tool}`} className="skill-tag">
+                              {tool}
+                            </span>
+                          ))}
+                          {project.tools.length > 4 && (
+                            <span className="skill-tag skill-tag--more">+{project.tools.length - 4}</span>
+                          )}
+                        </div>
+                        <span className="project-card-cta">Explore project →</span>
                       </div>
-
-                      {project.media && project.media.length > 0 && (
-                        <div className="immersive-media-grid">
-                          {project.media.map((item, mediaIndex) => {
-                          const mediaKey = `${project.title}-${item.label}-${mediaIndex}`;
-                          const isVideo = item.type === "video";
-                          const isAutoVideo = projectIndex === 0 && mediaIndex === 1;
-                          const shouldAutoPlay = isVideo && (hoveredVideoKey === mediaKey || isAutoVideo);
-
-                          return (
-                            <article
-                              key={mediaKey}
-                              className={`media-card ${isVideo ? "media-card-video" : "media-card-paper"}`}
-                              onMouseEnter={() => {
-                                if (isVideo) {
-                                  setHoveredVideoKey(mediaKey);
-                                }
-                              }}
-                              onMouseLeave={() => {
-                                if (isVideo) {
-                                  setHoveredVideoKey("");
-                                }
-                              }}
-                            >
-                              <div className="media-card-header">
-                                <p>{item.label}</p>
-                                {isVideo && <span className="media-hint">Hover to play</span>}
-                              </div>
-
-                              <div className="media-frame-wrap">
-                                {isVideo ? (
-                                  <iframe
-                                    src={toYouTubeEmbedUrl(item.link, {
-                                      autoplay: shouldAutoPlay,
-                                      muted: true,
-                                    })}
-                                    title={`${project.title} ${item.label}`}
-                                    className="media-frame"
-                                    loading="lazy"
-                                    referrerPolicy="strict-origin-when-cross-origin"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                    allowFullScreen
-                                  ></iframe>
-                                ) : (
-                                  <iframe
-                                    src={toGoogleDrivePreviewUrl(item.link)}
-                                    title={`${project.title} ${item.label}`}
-                                    className="media-frame"
-                                    loading="lazy"
-                                    allow="autoplay"
-                                  ></iframe>
-                                )}
-                              </div>
-
-                              <div className="paper-links-row">
-                                <a
-                                  className="paper-link"
-                                  href={item.link}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                >
-                                  {isVideo ? "Open video" : "Open paper"}
-                                </a>
-                              </div>
-                            </article>
-                          );
-                          })}
-                        </div>
-                      )}
-                    </article>
+                    </button>
                   </div>
                 ))}
               </div>
