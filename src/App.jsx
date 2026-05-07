@@ -174,6 +174,38 @@ const AGENTIC_PROJECTS = [
     ],
   },
   {
+    anchorId: "pantrypal",
+    title: "PantryPal",
+    date: "May 2026",
+    clientTag: "Personal Project",
+    summary:
+      "A sophisticated, full-stack web application designed to eliminate food waste and simplify meal planning. By combining real-time inventory tracking with advanced AI, PantryPal turns the ingredients you already have into delicious, personalized recipe inspirations.",
+    details:
+      "PantryPal features intelligent inventory management across pantry, fridge, and freezer with smart quantity suggestions and automated expiry tracking. The AI Chef, powered by Google Gemini Pro, analyzes your current inventory to generate creative, nutritious recipes on demand. Recipes are automatically tagged for dietary needs including 'Healthier Choice,' 'PCOS Friendly,' and 'Low-GI.' The app supports collaborative households for real-time pantry syncing, seamless Grocery integration for missing ingredients, and provides detailed nutritional transparency with macros and prep difficulty. Built with a meticulously crafted editorial UI featuring smooth transitions and premium responsive design.",
+    skills: [
+      "Full-Stack Development",
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "Framer Motion",
+      "Firebase Firestore",
+      "Firebase Auth",
+      "Google Gemini Pro",
+      "AI Integration",
+      "Real-time Sync",
+    ],
+    video: "/pantrypal/pantrypal-demo.mp4",
+    images: [
+      "/pantrypal/pantrypal-screenshot-01.png",
+      "/pantrypal/pantrypal-screenshot-02.png",
+      "/pantrypal/pantrypal-screenshot-03.png",
+      "/pantrypal/pantrypal-screenshot-04.png",
+      "/pantrypal/pantrypal-screenshot-05.png",
+      "/pantrypal/pantrypal-screenshot-06.png",
+      "/pantrypal/pantrypal-screenshot-07.png",
+    ],
+  },
+  {
     title: "Reframe",
     date: "Spring 2026",
     clientTag: "Personal Project",
@@ -1027,6 +1059,65 @@ function App() {
             </a>
           </section>
 
+          <section id="featured-project" className="panel featured-app reveal">
+            <div className="featured-app-header">
+              <a
+                className="featured-app-icon-and-title featured-app-link"
+                href="https://pantrypal-252908779850.us-central1.run.app/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <img
+                  src={toAssetPath("/pantrypal/pantrypalicon.png")}
+                  alt="PantryPal icon"
+                  className="featured-app-icon"
+                />
+                <div>
+                  <p className="eyebrow">Check Out My New App</p>
+                  <h2>PantryPal</h2>
+                </div>
+              </a>
+              <div className="featured-app-actions">
+                <a
+                  className="btn btn-primary"
+                  href="https://pantrypal-252908779850.us-central1.run.app/"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  View App
+                </a>
+                <a
+                  className="btn btn-ghost"
+                  href="https://github.com/ZhalaeDaneshvari/pantry-pal"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  View GitHub
+                </a>
+              </div>
+            </div>
+            <p className="featured-app-subtitle">
+              Your AI-Powered Kitchen Companion
+            </p>
+            <p>
+              PantryPal is a sophisticated, full-stack web application designed to eliminate food waste and simplify meal planning. By combining real-time inventory tracking with advanced AI, PantryPal turns the ingredients you already have into delicious, personalized recipe inspirations.
+            </p>
+            <div className="featured-app-highlights">
+              <div className="highlight">
+                <h3>Intelligent Inventory Management</h3>
+                <p>Track your pantry, fridge, and freezer items with smart quantity suggestions and automated expiry date tracking.</p>
+              </div>
+              <div className="highlight">
+                <h3>AI Chef (Gemini Powered)</h3>
+                <p>Our custom AI "Chef Bot" analyzes your inventory to generate creative, nutritious recipes while identifying what's missing.</p>
+              </div>
+              <div className="highlight">
+                <h3>Smart Categorization</h3>
+                <p>Recipes automatically tagged for dietary needs: "Healthier Choice," "PCOS Friendly," "Low-GI," and more.</p>
+              </div>
+            </div>
+          </section>
+
           <section id="experience" className="panel reveal">
             <div className="experience-header">
               <h2>Experience</h2>
@@ -1592,12 +1683,24 @@ function App() {
                     >
                       {(project.video || (project.images && project.images.length > 0)) && (
                         <div className="project-card-thumb">
-                          <img
-                            src={toAssetPath(project.images?.[0] || "/molecular/molecular%201.jpg")}
-                            alt=""
-                            aria-hidden="true"
-                            loading="lazy"
-                          />
+                          {project.video ? (
+                            <video
+                              src={toAssetPath(project.video)}
+                              poster={toAssetPath(project.images?.[0] || "/pantrypal/pantrypalicon.png")}
+                              muted
+                              playsInline
+                              loop
+                              autoPlay
+                              className="project-card-video-preview"
+                            />
+                          ) : (
+                            <img
+                              src={toAssetPath(project.images[0])}
+                              alt=""
+                              aria-hidden="true"
+                              loading="lazy"
+                            />
+                          )}
                           {project.video && (
                             <span className="project-card-video-badge">▶ Video</span>
                           )}
