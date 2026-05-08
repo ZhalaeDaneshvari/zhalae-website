@@ -179,7 +179,7 @@ const AGENTIC_PROJECTS = [
     date: "May 2026",
     clientTag: "Personal Project",
     summary:
-      "A sophisticated, full-stack web application designed to eliminate food waste and simplify meal planning. By combining real-time inventory tracking with advanced AI, PantryPal turns the ingredients you already have into delicious, personalized recipe inspirations.",
+      "Ever stare into your fridge with absolutely no idea what to cook? PantryPal is here to save the day. Just tell it what you've got, and let Chef (your AI sous chef) work some magic. Turning random pantry items into meals you actually want to eat.",
     details:
       "PantryPal features intelligent inventory management across pantry, fridge, and freezer with smart quantity suggestions and automated expiry tracking. The AI Chef, powered by Google Gemini Pro, analyzes your current inventory to generate creative, nutritious recipes on demand. Recipes are automatically tagged for dietary needs including 'Healthier Choice,' 'PCOS Friendly,' and 'Low-GI.' The app supports collaborative households for real-time pantry syncing, seamless Grocery integration for missing ingredients, and provides detailed nutritional transparency with macros and prep difficulty. Built with a meticulously crafted editorial UI featuring smooth transitions and premium responsive design.",
     skills: [
@@ -1100,7 +1100,7 @@ function App() {
               Your AI-Powered Kitchen Companion
             </p>
             <p>
-              PantryPal is a sophisticated, full-stack web application designed to eliminate food waste and simplify meal planning. By combining real-time inventory tracking with advanced AI, PantryPal turns the ingredients you already have into delicious, personalized recipe inspirations.
+              Ever stare into your fridge with absolutely no idea what to cook? PantryPal is here to save the day. Just tell it what you've got, and let Chef (your AI sous chef) work some magic. Turning random pantry items into meals you actually want to eat.
             </p>
             <div className="featured-app-highlights">
               <div className="highlight">
