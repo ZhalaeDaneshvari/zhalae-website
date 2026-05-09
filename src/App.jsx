@@ -345,6 +345,43 @@ const HCI_VR_PROJECTS = [
     ],
   },
   {
+    title: "SecondThought",
+    date: "Spring 2026",
+    clientTag: "Cornell",
+    summary:
+      "UX research on how upper-level Cornell STEM students use ChatGPT, Claude, and Gemini during real-world programming workflows.",
+    details:
+      "Through contextual interviews and a 3-day diary study, we investigated when students turn to AI, how they trust and verify outputs, and how emotions like frustration, confidence, convenience, and dependence shape behavior. We found students relied on AI during uncertainty, debugging, and time pressure, often prioritizing speed and momentum over deeper conceptual understanding. To explore how awareness might reshape these habits, I led the prototype and design of SecondThought, a reflective browser-extension prototype that introduces contextual reflection prompts and long-term usage insights for more mindful AI-assisted programming learning.",
+    tools: [
+      "UX Research",
+      "Conversational AI",
+      "Diary Study",
+      "Autobiographical Design",
+      "Reflective UX",
+      "Browser Extension Prototype",
+    ],
+    previewImage: "/secondthought/secondthought-02.png",
+    appLink: "https://ai.studio/apps/7b45178d-b4d0-48e7-a2ef-2f902bf1dff5?fullscreenApplet=true",
+    appCta: "Open prototype",
+    media: [
+      {
+        type: "video",
+        label: "Project Walkthrough",
+        link: "https://www.youtube.com/watch?v=TedcsgiGx38",
+      },
+    ],
+    images: [
+      "/secondthought/secondthought-01.png",
+      "/secondthought/secondthought-02.png",
+      "/secondthought/secondthought-03.png",
+      "/secondthought/secondthought-04.png",
+      "/secondthought/secondthought-05.png",
+      "/secondthought/secondthought-06.png",
+      "/secondthought/secondthought-07.png",
+      "/secondthought/secondthought-08.png",
+    ],
+  },
+  {
     title: "IFF Interactive House",
     date: "July 2024",
     clientTag: "Company: IFF",
@@ -1736,64 +1773,6 @@ function App() {
             </section>
           )}
 
-          {!expandedProject && (selectedCategory === "Data Science" || selectedCategory === "All Projects") && (
-            <section id="data-science-section" className="portfolio-section reveal category-switch-enter">
-              <div className="portfolio-section-header">
-                <h2>Data Science (2 Papers)</h2>
-              </div>
-
-              <div className="project-grid">
-                {DATA_SCIENCE_PAPERS.map((paper) => (
-                  <div key={paper.title} className="project-card-wrap">
-                    <button
-                      type="button"
-                      className="project-card project-card--preview"
-                      onClick={() =>
-                        setExpandedProject({
-                          ...paper,
-                          category: "Data Science",
-                          skills: paper.skills || [],
-                        })
-                      }
-                      aria-label={`View details for ${paper.title}`}
-                    >
-                      <div className="project-card-thumb project-card-thumb--paper">
-                        <iframe
-                          src={toGoogleDrivePreviewUrl(paper.paperLink)}
-                          title={`${paper.title} preview`}
-                          className="project-card-paper-frame"
-                          loading="lazy"
-                          allow="autoplay"
-                        ></iframe>
-                      </div>
-                      <div className="project-card-body">
-                        <div className="project-meta">
-                          <p className="project-date">{paper.date}</p>
-                          <div className="project-title-row">
-                            <h3>{paper.title}</h3>
-                            <span className="project-client-pill">{paper.clientTag}</span>
-                          </div>
-                        </div>
-                        <p className="project-summary project-summary--clamp">{paper.summary}</p>
-                        <div className="project-skills">
-                          {paper.skills.slice(0, 4).map((skill) => (
-                            <span key={`${paper.title}-${skill}`} className="skill-tag">
-                              {skill}
-                            </span>
-                          ))}
-                          {paper.skills.length > 4 && (
-                            <span className="skill-tag skill-tag--more">+{paper.skills.length - 4}</span>
-                          )}
-                        </div>
-                        <span className="project-card-cta">Read paper details →</span>
-                      </div>
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </section>
-          )}
-
           {!expandedProject && (selectedCategory === "UX / HCI" || selectedCategory === "All Projects") && (
             <section id="ux-hci-section" className="portfolio-section reveal category-switch-enter">
               <div className="portfolio-section-header">
@@ -1866,6 +1845,64 @@ function App() {
                           )}
                         </div>
                         <span className="project-card-cta">Explore project →</span>
+                      </div>
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {!expandedProject && (selectedCategory === "Data Science" || selectedCategory === "All Projects") && (
+            <section id="data-science-section" className="portfolio-section reveal category-switch-enter">
+              <div className="portfolio-section-header">
+                <h2>Data Science (2 Papers)</h2>
+              </div>
+
+              <div className="project-grid">
+                {DATA_SCIENCE_PAPERS.map((paper) => (
+                  <div key={paper.title} className="project-card-wrap">
+                    <button
+                      type="button"
+                      className="project-card project-card--preview"
+                      onClick={() =>
+                        setExpandedProject({
+                          ...paper,
+                          category: "Data Science",
+                          skills: paper.skills || [],
+                        })
+                      }
+                      aria-label={`View details for ${paper.title}`}
+                    >
+                      <div className="project-card-thumb project-card-thumb--paper">
+                        <iframe
+                          src={toGoogleDrivePreviewUrl(paper.paperLink)}
+                          title={`${paper.title} preview`}
+                          className="project-card-paper-frame"
+                          loading="lazy"
+                          allow="autoplay"
+                        ></iframe>
+                      </div>
+                      <div className="project-card-body">
+                        <div className="project-meta">
+                          <p className="project-date">{paper.date}</p>
+                          <div className="project-title-row">
+                            <h3>{paper.title}</h3>
+                            <span className="project-client-pill">{paper.clientTag}</span>
+                          </div>
+                        </div>
+                        <p className="project-summary project-summary--clamp">{paper.summary}</p>
+                        <div className="project-skills">
+                          {paper.skills.slice(0, 4).map((skill) => (
+                            <span key={`${paper.title}-${skill}`} className="skill-tag">
+                              {skill}
+                            </span>
+                          ))}
+                          {paper.skills.length > 4 && (
+                            <span className="skill-tag skill-tag--more">+{paper.skills.length - 4}</span>
+                          )}
+                        </div>
+                        <span className="project-card-cta">Read paper details →</span>
                       </div>
                     </button>
                   </div>
