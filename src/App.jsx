@@ -133,6 +133,17 @@ function toHashRoute(path) {
   return `${toAppPath("/")}#${path}`;
 }
 
+function slugify(text) {
+  return (
+    (text || "")
+      .toString()
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "")
+  );
+}
+
 function toAssetPath(path) {
   if (!path) {
     return path;
@@ -680,6 +691,36 @@ function App() {
 
     return () => window.clearTimeout(timeoutId);
   }, [routeQuery, selectedCategory]);
+
+  useEffect(() => {
+    // Open a project detail when URL is /portfolio/:slug
+    if (!isPortfolioPage) {
+      return undefined;
+    }
+
+    const parts = routePathname.split("/").filter(Boolean); // ['', 'portfolio', 'slug'] -> ['portfolio','slug']
+    const slug = parts[1];
+
+    if (!slug) {
+      return undefined;
+    }
+
+    const allProjects = [
+      ...AGENTIC_PROJECTS.map((p) => ({ ...p, category: "Agentic AI", skills: p.skills || [] })),
+      ...HCI_VR_PROJECTS.map((p) => ({ ...p, category: "UX / HCI", skills: p.tools || [] })),
+      ...DATA_SCIENCE_PAPERS.map((p) => ({ ...p, category: "Data Science", skills: p.skills || [] })),
+    ];
+
+    const match = allProjects.find((p) => (p.anchorId || slugify(p.title)) === slug);
+
+    if (match) {
+      setExpandedProject(match);
+    } else {
+      setExpandedProject(null);
+    }
+
+    return undefined;
+  }, [routePathname]);
 
   useEffect(() => {
     document.body.setAttribute("data-theme", theme);
@@ -1456,7 +1497,10 @@ function App() {
                 <button
                   type="button"
                   className="paper-link project-detail-back"
-                  onClick={() => setExpandedProject(null)}
+                  onClick={() => {
+                    setExpandedProject(null);
+                    goToRoute("/portfolio");
+                  }}
                 >
                   ← Back to {selectedCategory}
                 </button>
@@ -1709,13 +1753,15 @@ function App() {
                     <button
                       type="button"
                       className="project-card project-card--preview project-card--agentic"
-                      onClick={() =>
+                      onClick={() => {
+                        const slug = project.anchorId || slugify(project.title);
                         setExpandedProject({
                           ...project,
                           category: "Agentic AI",
                           skills: project.skills || [],
-                        })
-                      }
+                        });
+                        goToRoute(`/portfolio/${slug}`);
+                      }}
                       aria-label={`View details for ${project.title}`}
                     >
                       {(project.video || (project.images && project.images.length > 0)) && (
@@ -1785,13 +1831,15 @@ function App() {
                     <button
                       type="button"
                       className="project-card project-card--preview"
-                      onClick={() =>
+                      onClick={() => {
+                        const slug = project.anchorId || slugify(project.title);
                         setExpandedProject({
                           ...project,
                           category: "UX / HCI",
                           skills: project.tools || [],
-                        })
-                      }
+                        });
+                        goToRoute(`/portfolio/${slug}`);
+                      }}
                       aria-label={`View details for ${project.title}`}
                     >
                       <div className="project-card-thumb">
@@ -1865,13 +1913,15 @@ function App() {
                     <button
                       type="button"
                       className="project-card project-card--preview"
-                      onClick={() =>
+                      onClick={() => {
+                        const slug = paper.anchorId || slugify(paper.title);
                         setExpandedProject({
                           ...paper,
                           category: "Data Science",
                           skills: paper.skills || [],
-                        })
-                      }
+                        });
+                        goToRoute(`/portfolio/${slug}`);
+                      }}
                       aria-label={`View details for ${paper.title}`}
                     >
                       <div className="project-card-thumb project-card-thumb--paper">
