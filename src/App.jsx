@@ -1090,8 +1090,8 @@ function App() {
             <h2>About Me.</h2>
             <p>
               I am Zhalae, a developer and designer at Cornell University focused on data
-              science, UX, and interactive technology. I will complete my Bachelor&apos;s in
-              Information Science in May 2026 and finish my Master&apos;s in
+              science, UX, and interactive technology. I completed my Bachelor&apos;s in
+              Information Science in May 2026 and will finish my Master&apos;s in
               Information Science in December 2026.
             </p>
             <p>
