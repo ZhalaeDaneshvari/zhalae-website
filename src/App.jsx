@@ -1,4 +1,5 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useState, useRef } from "react";
+import { motion, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion";
 
 const ROLE_TITLES = ["Developer", "Designer"];
 const NAME_TO_TYPE = "Zhalae Daneshvari";
@@ -497,6 +498,188 @@ function toYouTubeThumbnailUrl(url) {
   return videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : "";
 }
 
+// Animation Components
+function ScrollRevealWrapper({ children, delay = 0, direction = "up" }) {
+  const ref = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  const variants = {
+    up: {
+      hidden: { opacity: 0, y: 40 },
+      visible: { opacity: 1, y: 0 },
+    },
+    left: {
+      hidden: { opacity: 0, x: -40 },
+      visible: { opacity: 1, x: 0 },
+    },
+    right: {
+      hidden: { opacity: 0, x: 40 },
+      visible: { opacity: 1, x: 0 },
+    },
+    scale: {
+      hidden: { opacity: 0, scale: 0.9 },
+      visible: { opacity: 1, scale: 1 },
+    },
+  };
+
+  return (
+    <motion.div
+      ref={ref}
+      variants={variants[direction] || variants.up}
+      initial="hidden"
+      animate={isVisible ? "visible" : "hidden"}
+      transition={{ duration: 0.6, delay, ease: "easeOut" }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+function ParallaxImage({ src, offset = 50 }) {
+  const ref = useRef(null);
+  const { scrollY } = useScroll();
+  const y = useTransform(scrollY, [0, 1000], [0, offset]);
+
+  return (
+    <motion.div ref={ref} style={{ y }}>
+      {typeof src === "string" ? <img src={src} alt="parallax" /> : src}
+    </motion.div>
+  );
+}
+
+function AnimatedSkillBadge({ skill, index }) {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <motion.span
+      className="skill-tag"
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ delay: index * 0.05, duration: 0.3 }}
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
+      whileHover={{
+        scale: 1.08,
+        boxShadow: "0 0 12px rgba(50, 205, 50, 0.5)",
+      }}
+    >
+      {skill}
+    </motion.span>
+  );
+}
+
+function Card3D({ children, className = "" }) {
+  const ref = useRef(null);
+  const [rotation, setRotation] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = (e) => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    const x = (e.clientY - rect.top - rect.height / 2) / 20;
+    const y = -(e.clientX - rect.left - rect.width / 2) / 20;
+    setRotation({ x, y });
+  };
+
+  const handleMouseLeave = () => {
+    setRotation({ x: 0, y: 0 });
+  };
+
+  return (
+    <motion.div
+      ref={ref}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        perspective: "1000px",
+      }}
+      animate={{
+        rotateX: rotation.x,
+        rotateY: rotation.y,
+      }}
+      transition={{ type: "spring", stiffness: 400, damping: 60 }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+function TimelineComponent({ experiences }) {
+  const groupedByYear = {};
+  experiences.forEach((exp) => {
+    const year = exp.dateMark || "Other";
+    if (!groupedByYear[year]) {
+      groupedByYear[year] = [];
+    }
+    groupedByYear[year].push(exp);
+  });
+
+  const years = ["Present", "2026", "2025", "2024", "2023"].filter((y) => groupedByYear[y]);
+
+  return (
+    <div className="timeline-container">
+      {years.map((year, yearIndex) => (
+        <div key={year} className="timeline-section">
+          <motion.div
+            className="timeline-year-marker"
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ delay: yearIndex * 0.1 }}
+            viewport={{ once: true }}
+          >
+            <span className="timeline-year">{year}</span>
+            <div className="timeline-connector" />
+          </motion.div>
+
+          <div className="timeline-items">
+            {groupedByYear[year].map((exp, index) => (
+              <ScrollRevealWrapper key={`${year}-${index}`} delay={yearIndex * 0.1 + index * 0.05}>
+                <article className="timeline-card">
+                  <div className="timeline-card-dot" />
+                  <div className="timeline-card-content">
+                    <div className="timeline-card-header">
+                      <img src={exp.logo} alt={exp.company} className="timeline-card-logo" />
+                      <div>
+                        <h3 className="timeline-card-role">{exp.role}</h3>
+                        <p className="timeline-card-company">{exp.company}</p>
+                      </div>
+                    </div>
+                    <p className="timeline-card-period">{exp.period}</p>
+                    <p className="timeline-card-description">{exp.description}</p>
+                    <div className="timeline-skills">
+                      {exp.skills.map((skill, skillIndex) => (
+                        <AnimatedSkillBadge key={skill} skill={skill} index={skillIndex} />
+                      ))}
+                    </div>
+                  </div>
+                </article>
+              </ScrollRevealWrapper>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function TypewriterText({ text, className, speed = 22, startDelay = 140 }) {
   const [rendered, setRendered] = useState("");
 
@@ -530,6 +713,102 @@ function TypewriterText({ text, className, speed = 22, startDelay = 140 }) {
       {rendered}
       <span className="typing-inline-cursor" aria-hidden="true"></span>
     </p>
+  );
+}
+
+function EnhancedHero({ roleTitles, typedName, onThemeToggle, theme }) {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const heroRef = useRef(null);
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      if (!heroRef.current) return;
+      const rect = heroRef.current.getBoundingClientRect();
+      setMousePosition({
+        x: (e.clientX - rect.left) / rect.width,
+        y: (e.clientY - rect.top) / rect.height,
+      });
+    };
+
+    const element = heroRef.current;
+    if (element) {
+      element.addEventListener("mousemove", handleMouseMove);
+      return () => element.removeEventListener("mousemove", handleMouseMove);
+    }
+  }, []);
+
+  return (
+    <section className="hero reveal" ref={heroRef}>
+      <div className="hero-gradient-overlay">
+        <motion.div
+          className="hero-gradient-blob"
+          animate={{
+            x: mousePosition.x * 30,
+            y: mousePosition.y * 30,
+          }}
+          transition={{ type: "spring", stiffness: 100, damping: 30 }}
+        />
+      </div>
+
+      <motion.div
+        className="hero-content"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+      >
+        <h1 className="hero-name">
+          <span className="hero-greeting">Hey, I'm</span>
+          <br />
+          <span className="hero-typed">{typedName}</span>
+          <span className="typing-inline-cursor hero-cursor" aria-hidden="true"></span>
+        </h1>
+
+        <motion.div
+          className="hero-roles"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3, duration: 0.8 }}
+        >
+          <p className="hero-role-text">
+            <span>{roleTitles}</span>
+          </p>
+        </motion.div>
+
+        <motion.p
+          className="hero-tagline"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5, duration: 0.8 }}
+        >
+          Building AI systems, immersive VR experiences, and thoughtful digital products.
+        </motion.p>
+
+        <motion.div
+          className="hero-actions"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.7, duration: 0.8 }}
+        >
+          <motion.a
+            href="/zhalae-website/#portfolio"
+            className="hero-cta-primary"
+            whileHover={{ scale: 1.05, boxShadow: "0 8px 24px rgba(50, 205, 50, 0.3)" }}
+            whileTap={{ scale: 0.95 }}
+          >
+            Explore my work
+          </motion.a>
+          <motion.button
+            onClick={onThemeToggle}
+            className="theme-toggle"
+            whileHover={{ rotate: 20 }}
+            whileTap={{ rotate: 10 }}
+            title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+          >
+            {theme === "dark" ? "☀️" : "🌙"}
+          </motion.button>
+        </motion.div>
+      </motion.div>
+    </section>
   );
 }
 
@@ -1069,33 +1348,86 @@ function App() {
       {!isExperiencePage && !isPortfolioPage && !isResumePage && (
         <main id="home">
           <section className="hero reveal">
-            <p className="eyebrow">Personal Website</p>
-            <h1 aria-label="Zhalae Daneshvari, Developer and Designer">
-              <span className="typing-line">
-                <span className="typing-prefix">...</span>
-                <span id="typed-name">{typedName}</span>
-                <span className="typing-cursor" aria-hidden="true"></span>
-              </span>
-              <span className="title-rotator" aria-label="Role rotating text">
-                {ROLE_TITLES.map((title, index) => (
-                  <span key={title} className={`title ${index === roleIndex ? "active" : ""}`}>
-                    {title}
-                  </span>
-                ))}
-              </span>
-            </h1>
-            <p className="subtitle">
-              Developer and designer building digital experiences at Cornell University with a focus on
-              creative engineering and thoughtful design.
-            </p>
-            <div className="hero-actions">
-              <a className="btn btn-primary" href={toHashRoute("/portfolio")}>
-                View Portfolio
-              </a>
-              <a className="btn btn-ghost" href="#contact">
-                Get In Touch
-              </a>
+            <div className="hero-gradient-overlay">
+              <motion.div
+                className="hero-gradient-blob"
+                animate={{
+                  backgroundPosition: ["0% 0%", "100% 100%", "0% 0%"],
+                }}
+                transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+              />
             </div>
+            <motion.div
+              className="hero-content"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <motion.p
+                className="eyebrow"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.2 }}
+              >
+                Personal Website
+              </motion.p>
+              <h1 aria-label="Zhalae Daneshvari, Developer and Designer">
+                <motion.span
+                  className="typing-line"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.1 }}
+                >
+                  <span className="typing-prefix">...</span>
+                  <span id="typed-name">{typedName}</span>
+                  <span className="typing-cursor" aria-hidden="true"></span>
+                </motion.span>
+                <span className="title-rotator" aria-label="Role rotating text">
+                  {ROLE_TITLES.map((title, index) => (
+                    <motion.span
+                      key={title}
+                      className={`title ${index === roleIndex ? "active" : ""}`}
+                      animate={{ opacity: index === roleIndex ? 1 : 0.3 }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      {title}
+                    </motion.span>
+                  ))}
+                </span>
+              </h1>
+              <motion.p
+                className="subtitle"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3, duration: 0.8 }}
+              >
+                Developer and designer building digital experiences at Cornell University with a focus on
+                creative engineering and thoughtful design.
+              </motion.p>
+              <motion.div
+                className="hero-actions"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5, duration: 0.8 }}
+              >
+                <motion.a
+                  className="btn btn-primary"
+                  href={toHashRoute("/portfolio")}
+                  whileHover={{ scale: 1.05, boxShadow: "0 8px 24px rgba(50, 205, 50, 0.3)" }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  View Portfolio
+                </motion.a>
+                <motion.a
+                  className="btn btn-ghost"
+                  href="#contact"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Get In Touch
+                </motion.a>
+              </motion.div>
+            </motion.div>
           </section>
 
           <section id="about" className="panel reveal">
@@ -1209,121 +1541,23 @@ function App() {
           </section>
 
           <section id="experience" className="panel reveal">
-            <div className="experience-header">
-              <h2>Experience</h2>
-              <a className="see-more-link" href={toHashRoute("/experience")}>
-                See More
-              </a>
-            </div>
-            <div
-              className="experience-carousel-shell"
-              onMouseEnter={() => setIsCarouselPaused(true)}
-              onMouseLeave={() => setIsCarouselPaused(false)}
+            <motion.div
+              className="experience-header"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
             >
-              <button
-                className="carousel-arrow"
-                type="button"
-                aria-label="Previous experience"
-                onClick={() =>
-                  setCarouselIndex((current) =>
-                    (current - 1 + EXPERIENCES.length) % EXPERIENCES.length
-                  )
-                }
+              <h2>Experience</h2>
+              <motion.a
+                className="see-more-link"
+                href={toHashRoute("/experience")}
+                whileHover={{ x: 5 }}
               >
-                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                  <path
-                    d="M15 5L8 12L15 19"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </button>
-
-              <div className="experience-carousel-window">
-                <article className="experience-carousel">
-                  <div className="experience-logo" aria-hidden="true">
-                    {activeExperience.logo ? (
-                      <img
-                        src={toAssetPath(activeExperience.logo)}
-                        alt={`${activeExperience.company} logo`}
-                      />
-                    ) : (
-                      activeExperience.logoText
-                    )}
-                  </div>
-                  <div className="experience-carousel-content">
-                    <p className="experience-role">{activeExperience.role}</p>
-                    <p className="experience-company">{activeExperience.company}</p>
-                    <p className="experience-time">{activeExperience.period}</p>
-                    <p className="experience-note">{activeExperience.description}</p>
-                    <div className="experience-skills">
-                      {activeExperience.skills.map((skill) => (
-                        <span key={skill} className="skill-tag">
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </article>
-
-                <article className="experience-preview" aria-hidden="true">
-                  <div className="experience-logo">
-                    {nextExperience.logo ? (
-                      <img
-                        src={toAssetPath(nextExperience.logo)}
-                        alt={`${nextExperience.company} logo`}
-                      />
-                    ) : (
-                      nextExperience.logoText
-                    )}
-                  </div>
-                  <div className="experience-carousel-content">
-                    <p className="experience-role">{nextExperience.role}</p>
-                    <p className="experience-company">{nextExperience.company}</p>
-                    <p className="experience-time">{nextExperience.period}</p>
-                  </div>
-                </article>
-              </div>
-
-              <button
-                className="carousel-arrow"
-                type="button"
-                aria-label="Next experience"
-                onClick={() =>
-                  setCarouselIndex((current) => (current + 1) % EXPERIENCES.length)
-                }
-              >
-                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                  <path
-                    d="M9 5L16 12L9 19"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </button>
-            </div>
-            <div className="carousel-progress">
-              <div className="carousel-dots" aria-label="Experience carousel controls">
-                {EXPERIENCES.map((item, index) => (
-                  <button
-                    key={`${item.company}-${item.role}-${item.period}`}
-                    type="button"
-                    className={`carousel-dot ${index === carouselIndex ? "active" : ""}`}
-                    aria-label={`Show ${item.company}`}
-                    onClick={() => setCarouselIndex(index)}
-                  ></button>
-                ))}
-              </div>
-              <span className="carousel-count" aria-live="polite">
-                {carouselIndex + 1}/{EXPERIENCES.length}
-              </span>
-            </div>
+                See Full Timeline
+              </motion.a>
+            </motion.div>
+            <TimelineComponent experiences={EXPERIENCES.slice(0, 4)} />
           </section>
 
           <section id="contact" className="panel reveal">
@@ -1756,55 +1990,63 @@ function App() {
               </div>
 
               <div className="project-grid">
-                {AGENTIC_PROJECTS.map((project) => (
-                  <div
-                    key={project.title}
-                    id={project.anchorId || undefined}
-                    className="project-card-wrap"
-                  >
-                    <button
-                      type="button"
-                      className="project-card project-card--preview project-card--agentic"
-                      onClick={() => {
-                        const slug = project.anchorId || slugify(project.title);
-                        setExpandedProject({
-                          ...project,
-                          category: "Agentic AI",
-                          skills: project.skills || [],
-                        });
-                        goToRoute(`/portfolio/${slug}`);
-                      }}
-                      aria-label={`View details for ${project.title}`}
+                {AGENTIC_PROJECTS.map((project, index) => (
+                  <ScrollRevealWrapper key={project.title} delay={index * 0.1} direction="up">
+                    <div
+                      id={project.anchorId || undefined}
+                      className="project-card-wrap"
                     >
-                      {(project.video || (project.images && project.images.length > 0)) && (
-                        <div className="project-card-thumb">
-                          {project.video ? (
-                            <video
-                              src={toAssetPath(project.video)}
-                              poster={toAssetPath(project.images?.[0] || "/pantrypal/pantrypalicon.png")}
-                              muted
-                              playsInline
-                              loop
-                              autoPlay
-                              className="project-card-video-preview"
-                            />
-                          ) : (
-                            <img
-                              src={toAssetPath(project.images[0])}
-                              alt=""
-                              aria-hidden="true"
-                              loading="lazy"
-                            />
-                          )}
-                          {project.video && (
-                            <span className="project-card-video-badge">▶ Video</span>
-                          )}
-                        </div>
-                      )}
-                      <div className="project-card-body">
-                        <div className="project-meta">
-                          <p className="project-date">{project.date}</p>
-                          <div className="project-title-row">
+                      <motion.button
+                        type="button"
+                        className="project-card project-card--preview project-card--agentic"
+                        onClick={() => {
+                          const slug = project.anchorId || slugify(project.title);
+                          setExpandedProject({
+                            ...project,
+                            category: "Agentic AI",
+                            skills: project.skills || [],
+                          });
+                          goToRoute(`/portfolio/${slug}`);
+                        }}
+                        aria-label={`View details for ${project.title}`}
+                        whileHover={{
+                          y: -8,
+                          boxShadow: "0 20px 40px rgba(50, 205, 50, 0.2)",
+                        }}
+                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                      >
+                        {(project.video || (project.images && project.images.length > 0)) && (
+                          <motion.div
+                            className="project-card-thumb"
+                            whileHover={{ scale: 1.05 }}
+                          >
+                            {project.video ? (
+                              <video
+                                src={toAssetPath(project.video)}
+                                poster={toAssetPath(project.images?.[0] || "/pantrypal/pantrypalicon.png")}
+                                muted
+                                playsInline
+                                loop
+                                autoPlay
+                                className="project-card-video-preview"
+                              />
+                            ) : (
+                              <img
+                                src={toAssetPath(project.images[0])}
+                                alt=""
+                                aria-hidden="true"
+                                loading="lazy"
+                              />
+                            )}
+                            {project.video && (
+                              <span className="project-card-video-badge">▶ Video</span>
+                            )}
+                          </motion.div>
+                        )}
+                        <div className="project-card-body">
+                          <div className="project-meta">
+                            <p className="project-date">{project.date}</p>
+                            <div className="project-title-row">
                             <h3>{project.title}</h3>
                             {project.clientTag && (
                               <span className="project-client-pill">{project.clientTag}</span>
@@ -1824,8 +2066,9 @@ function App() {
                         </div>
                         <span className="project-card-cta">View project →</span>
                       </div>
-                    </button>
-                  </div>
+                    </motion.button>
+                    </div>
+                  </ScrollRevealWrapper>
                 ))}
               </div>
             </section>
@@ -1838,23 +2081,32 @@ function App() {
               </div>
 
               <div className="project-grid">
-                {HCI_VR_PROJECTS.map((project) => (
-                  <div key={project.title} className="project-card-wrap">
-                    <button
-                      type="button"
-                      className="project-card project-card--preview"
-                      onClick={() => {
-                        const slug = project.anchorId || slugify(project.title);
-                        setExpandedProject({
-                          ...project,
+                {HCI_VR_PROJECTS.map((project, index) => (
+                  <ScrollRevealWrapper key={project.title} delay={index * 0.1} direction="up">
+                    <div className="project-card-wrap">
+                      <motion.button
+                        type="button"
+                        className="project-card project-card--preview"
+                        onClick={() => {
+                          const slug = project.anchorId || slugify(project.title);
+                          setExpandedProject({
+                            ...project,
                           category: "UX / HCI",
                           skills: project.tools || [],
                         });
                         goToRoute(`/portfolio/${slug}`);
                       }}
                       aria-label={`View details for ${project.title}`}
+                      whileHover={{
+                        y: -8,
+                        boxShadow: "0 20px 40px rgba(50, 205, 50, 0.2)",
+                      }}
+                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
                     >
-                      <div className="project-card-thumb">
+                      <motion.div
+                        className="project-card-thumb"
+                        whileHover={{ scale: 1.05 }}
+                      >
                         {project.media && project.media[0]?.type === "video" ? (
                           <>
                             <img
@@ -1882,7 +2134,7 @@ function App() {
                         ) : (
                           <div className="project-card-fallback">Project Preview</div>
                         )}
-                      </div>
+                      </motion.div>
 
                       <div className="project-card-body">
                         <div className="project-meta">
@@ -1906,8 +2158,9 @@ function App() {
                         </div>
                         <span className="project-card-cta">Explore project →</span>
                       </div>
-                    </button>
-                  </div>
+                    </motion.button>
+                    </div>
+                  </ScrollRevealWrapper>
                 ))}
               </div>
             </section>
@@ -1920,23 +2173,32 @@ function App() {
               </div>
 
               <div className="project-grid">
-                {DATA_SCIENCE_PAPERS.map((paper) => (
-                  <div key={paper.title} className="project-card-wrap">
-                    <button
-                      type="button"
-                      className="project-card project-card--preview"
-                      onClick={() => {
-                        const slug = paper.anchorId || slugify(paper.title);
-                        setExpandedProject({
-                          ...paper,
-                          category: "Data Science",
-                          skills: paper.skills || [],
-                        });
-                        goToRoute(`/portfolio/${slug}`);
-                      }}
-                      aria-label={`View details for ${paper.title}`}
-                    >
-                      <div className="project-card-thumb project-card-thumb--paper">
+                {DATA_SCIENCE_PAPERS.map((paper, index) => (
+                  <ScrollRevealWrapper key={paper.title} delay={index * 0.1} direction="up">
+                    <div className="project-card-wrap">
+                      <motion.button
+                        type="button"
+                        className="project-card project-card--preview"
+                        onClick={() => {
+                          const slug = paper.anchorId || slugify(paper.title);
+                          setExpandedProject({
+                            ...paper,
+                            category: "Data Science",
+                            skills: paper.skills || [],
+                          });
+                          goToRoute(`/portfolio/${slug}`);
+                        }}
+                        aria-label={`View details for ${paper.title}`}
+                        whileHover={{
+                          y: -8,
+                          boxShadow: "0 20px 40px rgba(50, 205, 50, 0.2)",
+                        }}
+                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                      >
+                        <motion.div
+                          className="project-card-thumb project-card-thumb--paper"
+                          whileHover={{ scale: 1.05 }}
+                        >
                         <iframe
                           src={toGoogleDrivePreviewUrl(paper.paperLink)}
                           title={`${paper.title} preview`}
@@ -1944,7 +2206,15 @@ function App() {
                           loading="lazy"
                           allow="autoplay"
                         ></iframe>
-                      </div>
+                        >
+                        <iframe
+                          src={toGoogleDrivePreviewUrl(paper.paperLink)}
+                          title={`${paper.title} preview`}
+                          className="project-card-paper-frame"
+                          loading="lazy"
+                          allow="autoplay"
+                        ></iframe>
+                      </motion.div>
                       <div className="project-card-body">
                         <div className="project-meta">
                           <p className="project-date">{paper.date}</p>
@@ -1966,8 +2236,9 @@ function App() {
                         </div>
                         <span className="project-card-cta">Read paper details →</span>
                       </div>
-                    </button>
-                  </div>
+                    </motion.button>
+                    </div>
+                  </ScrollRevealWrapper>
                 ))}
               </div>
             </section>
