@@ -4,27 +4,15 @@ const ROLE_TITLES = ["Developer", "Designer"];
 const NAME_TO_TYPE = "Zhalae Daneshvari";
 const EXPERIENCES = [
   {
-    company: "Johnson & Johnson",
-    role: "Digital Measures & Biosensors Intern",
-    period: "May 2026 - August 2026",
-    dateMark: "Incoming",
-    description:
-      "Incoming Summer 2026. Focused on digital health measurement systems and biosensor-driven analytics workflows.",
-    logoText: "J&J",
-    logo: "/jnj.png",
-    skills: ["Digital Health", "Biosensors", "Data Analytics"],
-    filters: ["Data Science"],
-  },
-  {
     company: "Cornell Bowers",
-    role: "Teaching Assistant",
-    period: "August 2024 - Present",
+    role: "Graduate Teaching Assistant",
+    period: "August 2026 - Present",
     dateMark: "Present",
     description:
-      "Teaching web development and design across two courses, covering HTML, CSS, JavaScript, React, Express.js, MongoDB, and REST APIs while mentoring students on accessibility, UX/UI, and Git workflows.",
+      "Teaching INFO 3450: Human Computer Interaction Design, guiding students through HCI principles, design thinking methodologies, and interactive system evaluation.",
     logoText: "CB",
     logo: "/bowers.jpeg",
-    skills: ["React", "Express.js", "MongoDB", "UX/UI", "Teaching"],
+    skills: ["HCI", "Design Thinking", "Teaching", "UX/UI"],
     filters: ["UX"],
   },
   {
@@ -40,10 +28,34 @@ const EXPERIENCES = [
     filters: ["UX"],
   },
   {
+    company: "Johnson & Johnson",
+    role: "Digital Measures & Biosensors Intern",
+    period: "May 2026 - August 2026",
+    dateMark: "2026",
+    description:
+      "Spearheaded the technical evaluation and strategic implementation planning of novel digital health technologies, including biosensors, wearables, and functional vision endpoints, generating evidence that informed clinical trial design, de-risked technology adoption, and accelerated the development of scalable digital measurement capabilities across different therapeutic areas.",
+    logoText: "J&J",
+    logo: "/jnj.png",
+    skills: ["Digital Health", "Biosensors", "Clinical Trials", "Data Analytics"],
+    filters: ["Data Science"],
+  },
+  {
+    company: "Cornell Bowers",
+    role: "Undergraduate Teaching Assistant",
+    period: "August 2024 - May 2026",
+    dateMark: "",
+    description:
+      "Teaching web development and design across two courses, covering HTML, CSS, JavaScript, React, Express.js, MongoDB, and REST APIs while mentoring students on accessibility, UX/UI, and Git workflows.",
+    logoText: "CB",
+    logo: "/bowers.jpeg",
+    skills: ["React", "Express.js", "MongoDB", "UX/UI", "Teaching"],
+    filters: ["UX"],
+  },
+  {
     company: "Design + Augmented Intelligence Lab",
     role: "Research Assistant",
     period: "August 2024 - January 2026",
-    dateMark: "2025",
+    dateMark: "",
     description:
       "Researched environmental psychology in healthcare design and evaluated way-finding solutions in medical settings using VR, plus built Python automation scripts for behavioral data analysis.",
     logoText: "DAIL",
@@ -55,7 +67,7 @@ const EXPERIENCES = [
     company: "Johnson & Johnson",
     role: "Data Science Intern",
     period: "May 2025 - August 2025",
-    dateMark: "",
+    dateMark: "2025",
     description:
       "Engineered and deployed an agentic AI system on Vertex AI ADK for real-time bidirectional reasoning between molecular structure and adverse event risk, with hybrid similarity modeling and GCP deployment for pharmacovigilance predictions.",
     logoText: "J&J",
