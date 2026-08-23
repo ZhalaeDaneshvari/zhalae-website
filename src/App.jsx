@@ -656,7 +656,7 @@ function TimelineComponent({ experiences }) {
                   <div className="timeline-card-dot" />
                   <div className="timeline-card-content">
                     <div className="timeline-card-header">
-                      <img src={exp.logo} alt={exp.company} className="timeline-card-logo" />
+                      <img src={toAssetPath(exp.logo)} alt={exp.company} className="timeline-card-logo" />
                       <div>
                         <h3 className="timeline-card-role">{exp.role}</h3>
                         <p className="timeline-card-company">{exp.company}</p>
