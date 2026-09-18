@@ -1387,7 +1387,8 @@ function App() {
                     <motion.span
                       key={title}
                       className={`title ${index === roleIndex ? "active" : ""}`}
-                      animate={{ opacity: index === roleIndex ? 1 : 0.3 }}
+                      aria-hidden={index !== roleIndex}
+                      animate={{ opacity: index === roleIndex ? 1 : 0 }}
                       transition={{ duration: 0.5 }}
                     >
                       {title}
@@ -2198,14 +2199,6 @@ function App() {
                         <motion.div
                           className="project-card-thumb project-card-thumb--paper"
                           whileHover={{ scale: 1.05 }}
-                        >
-                        <iframe
-                          src={toGoogleDrivePreviewUrl(paper.paperLink)}
-                          title={`${paper.title} preview`}
-                          className="project-card-paper-frame"
-                          loading="lazy"
-                          allow="autoplay"
-                        ></iframe>
                         >
                         <iframe
                           src={toGoogleDrivePreviewUrl(paper.paperLink)}
