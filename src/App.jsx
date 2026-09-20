@@ -1,3 +1,4 @@
+import documentPages from "./documents.json";
 import { Fragment, useEffect, useState, useRef } from "react";
 import { motion, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion";
 
@@ -5,24 +6,34 @@ const ROLE_TITLES = ["Developer", "Designer"];
 const NAME_TO_TYPE = "Zhalae Daneshvari";
 const EXPERIENCES = [
   {
+    company: "Virtual Embodiment Lab",
+    role: "Graduate Researcher",
+    period: "August 2026 - Present",
+    dateMark: "Present",
+    description: "Leading research on VR-based sensory remapping as a potential therapeutic intervention for phantom limb pain with Weill Cornell Medical School. Co-authored an ACM CHI ’27 submission examining how asymmetric transformations of avatar movement shape social behavior and perception in multi-user VR.",
+    logo: "/vel.jpeg", logoText: "VEL",
+    skills: ["Virtual Reality", "Sensory Remapping", "Human Perception", "HCI Research"],
+    filters: ["UX"],
+  },
+  {
     company: "Cornell Bowers",
     role: "Graduate Teaching Assistant",
     period: "August 2026 - Present",
     dateMark: "Present",
     description:
-      "Teaching INFO 3450: Human Computer Interaction Design, guiding students through HCI principles, design thinking methodologies, and interactive system evaluation.",
+      "Teaching INFO 4340: App Prototyping and Design, supporting students in building apps with Vue.js, agentic AI, and LLM integration through WebLLMs and APIs.",
     logoText: "CB",
     logo: "/bowers.jpeg",
-    skills: ["HCI", "Design Thinking", "Teaching", "UX/UI"],
+    skills: ["Vue.js", "Agentic AI", "WebLLMs", "API Integration", "Teaching"],
     filters: ["UX"],
   },
   {
     company: "Virtual Embodiment Lab",
     role: "Research Assistant",
-    period: "January 2025 - Present",
+    period: "January 2025 - August 2026",
     dateMark: "",
     description:
-      "Developing and designing advanced Unity-based VR systems for studies on embodiment, acute pain modulation, and altered self-perception in virtual spaces.",
+      "Developed and designed advanced Unity-based VR systems for studies on embodiment, acute pain modulation, and altered self-perception in virtual spaces.",
     logoText: "VEL",
     logo: "/vel.jpeg",
     skills: ["Unity", "VR", "Experimental Design", "Human Perception"],
@@ -109,9 +120,6 @@ const PORTFOLIO_CATEGORIES = [
   "Data Science",
 ];
 
-const RESUME_LINK =
-  "https://drive.google.com/file/d/1wJXdz9DhP-0oiM1rDmjpX38l3BMESqjj/view?usp=sharing";
-
 const BASE_URL = import.meta.env.BASE_URL || "/";
 const BASE_PATH = BASE_URL === "/" ? "" : BASE_URL.replace(/\/$/, "");
 
@@ -171,6 +179,8 @@ function toAssetPath(path) {
 
   return `${trimmedBase}${normalizedPath}`;
 }
+
+const RESUME_LINK = toAssetPath("/documents/resume.pdf");
 
 const AGENTIC_PROJECTS = [
   {
@@ -321,7 +331,7 @@ const DATA_SCIENCE_PAPERS = [
       "How do growth-focused majors compare with majors optimized for strong starting salaries?",
     ],
     skills: ["Data Analysis", "Statistical Modeling", "Economic Research", "Data Storytelling"],
-    paperLink: "https://drive.google.com/file/d/1v1p3aKT06gCFtwVlmwllphqxXPmSwEyB/view",
+    paperLink: toAssetPath("/documents/career-salaries.pdf"),
   },
   {
     title: "Food Access and Equity: Socioeconomic Patterns in New York's Grocery Landscape",
@@ -336,7 +346,7 @@ const DATA_SCIENCE_PAPERS = [
       "Are there significant disparities in store access across different racial groups?",
     ],
     skills: ["Geospatial Analysis", "Socioeconomic Data", "Equity Research", "Policy-Oriented Analytics"],
-    paperLink: "https://drive.google.com/file/d/1oiE8DfdLMhOMyO07Z-zN5zF85gkssIKS/view",
+    paperLink: toAssetPath("/documents/food-access.pdf"),
   },
 ];
 
@@ -364,7 +374,7 @@ const HCI_VR_PROJECTS = [
       {
         type: "paper",
         label: "Research Paper",
-        link: "https://drive.google.com/file/d/1awgh9TZpuktGHnLq0IdYjsCudAaVMGnM/view",
+        link: toAssetPath("/documents/asl-glasses.pdf"),
       },
     ],
   },
@@ -454,9 +464,21 @@ const HCI_VR_PROJECTS = [
   },
 ];
 
-function toGoogleDrivePreviewUrl(url) {
-  const match = url.match(/\/file\/d\/([^/]+)/);
-  return match ? `https://drive.google.com/file/d/${match[1]}/preview` : url;
+function DocumentPreview({ url, title }) {
+  const [page, setPage] = useState(0);
+  const key = url.split("/").pop().replace(".pdf", "");
+  const pages = documentPages[key] || [];
+  useEffect(() => setPage(0), [url]);
+  const currentPage = Math.min(page, Math.max(0, pages.length - 1));
+  return <section className="document-viewer" aria-label={title}>
+    <div className="document-toolbar">
+      <a href={url} target="_blank" rel="noreferrer">Open PDF ↗</a>
+      <a href={url} download>Download</a>
+      {pages.length > 1 && <div className="document-pagination"><button type="button" disabled={currentPage === 0} onClick={() => setPage(currentPage - 1)} aria-label="Previous PDF page">←</button><span role="status">Page {currentPage + 1} of {pages.length}</span><button type="button" disabled={currentPage === pages.length - 1} onClick={() => setPage(currentPage + 1)} aria-label="Next PDF page">→</button></div>}
+    </div>
+    <p className="document-hint">Page preview. Open the PDF for selectable text, search, and zoom.</p>
+    {pages[currentPage] && <a className="document-page" href={url} target="_blank" rel="noreferrer" aria-label={`Open ${title} as PDF`}><img src={toAssetPath(pages[currentPage])} alt={`${title}, page ${currentPage + 1}. Open the PDF to read the document text.`} /></a>}
+  </section>;
 }
 
 function getYouTubeVideoId(url) {
@@ -680,40 +702,8 @@ function TimelineComponent({ experiences }) {
   );
 }
 
-function TypewriterText({ text, className, speed = 22, startDelay = 140 }) {
-  const [rendered, setRendered] = useState("");
-
-  useEffect(() => {
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    if (prefersReducedMotion) {
-      setRendered(text);
-      return undefined;
-    }
-
-    let index = 0;
-    let timeoutId;
-
-    const typeNext = () => {
-      setRendered(text.slice(0, index));
-
-      if (index < text.length) {
-        index += 1;
-        timeoutId = window.setTimeout(typeNext, speed);
-      }
-    };
-
-    timeoutId = window.setTimeout(typeNext, startDelay);
-
-    return () => window.clearTimeout(timeoutId);
-  }, [text, speed, startDelay]);
-
-  return (
-    <p className={className}>
-      {rendered}
-      <span className="typing-inline-cursor" aria-hidden="true"></span>
-    </p>
-  );
+function TypewriterText({ text, className }) {
+  return <p className={className}>{text}</p>;
 }
 
 function EnhancedHero({ roleTitles, typedName, onThemeToggle, theme }) {
@@ -822,13 +812,13 @@ function App() {
 
     return "dark";
   });
-  const [roleIndex, setRoleIndex] = useState(0);
-  const [typedName, setTypedName] = useState("");
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [isCarouselPaused, setIsCarouselPaused] = useState(false);
   const [activeImage, setActiveImage] = useState(null);
   const [expandedProject, setExpandedProject] = useState(null);
   const [detailImageIndex, setDetailImageIndex] = useState(0);
+  const [experienceFilter, setExperienceFilter] = useState("All roles");
+  const [projectQuery, setProjectQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All Projects");
   const [isPaletteOpen, setIsPaletteOpen] = useState(false);
   const [paletteQuery, setPaletteQuery] = useState("");
@@ -837,6 +827,7 @@ function App() {
   const [routePathname, routeQuery = ""] = routePath.split("?");
   const isExperiencePage = routePathname.startsWith("/experience");
   const isPortfolioPage = routePathname.startsWith("/portfolio");
+  const isResearchPage = routePathname.startsWith("/research");
   const isResumePage = routePathname.startsWith("/resume");
 
   const goToHomeAnchor = (anchor) => {
@@ -863,6 +854,7 @@ function App() {
       keywords: "timeline jobs internships",
       run: () => goToRoute("/experience"),
     },
+    { label: "Open Research", keywords: "labs science healthcare VR", run: () => goToRoute("/research") },
     {
       label: "Open Resume",
       keywords: "cv",
@@ -957,6 +949,12 @@ function App() {
   }, []);
 
   useEffect(() => {
+    if (routePathname.startsWith("/portfolio") || routePathname.startsWith("/experience") || routePathname.startsWith("/research") || routePathname.startsWith("/resume")) {
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+  }, [routePathname]);
+
+  useEffect(() => {
     const params = new URLSearchParams(routeQuery);
     const categoryParam = params.get("category");
 
@@ -993,6 +991,7 @@ function App() {
     const slug = parts[1];
 
     if (!slug) {
+      setExpandedProject(null);
       return undefined;
     }
 
@@ -1019,14 +1018,6 @@ function App() {
   }, [theme]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setRoleIndex((current) => (current + 1) % ROLE_TITLES.length);
-    }, 1800);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  useEffect(() => {
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     if (prefersReducedMotion || isCarouselPaused || isExperiencePage || isPortfolioPage) {
@@ -1039,31 +1030,6 @@ function App() {
 
     return () => window.clearInterval(interval);
   }, [isCarouselPaused, isExperiencePage, isPortfolioPage]);
-
-  useEffect(() => {
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    if (prefersReducedMotion) {
-      setTypedName(NAME_TO_TYPE);
-      return undefined;
-    }
-
-    let index = 0;
-    let timeoutId;
-
-    const typeNext = () => {
-      setTypedName(NAME_TO_TYPE.slice(0, index));
-
-      if (index < NAME_TO_TYPE.length) {
-        index += 1;
-        timeoutId = window.setTimeout(typeNext, 95);
-      }
-    };
-
-    timeoutId = window.setTimeout(typeNext, 320);
-
-    return () => window.clearTimeout(timeoutId);
-  }, []);
 
   useEffect(() => {
     const revealElements = document.querySelectorAll(".reveal");
@@ -1220,7 +1186,7 @@ function App() {
       <header className="topbar">
         <a
           className="brand"
-          href={isExperiencePage || isPortfolioPage || isResumePage ? toAppPath("/") : "#home"}
+          href={isExperiencePage || isPortfolioPage || isResumePage || isResearchPage ? toAppPath("/") : "#home"}
         >
           ZD
         </a>
@@ -1229,7 +1195,7 @@ function App() {
             <li>
               <a
                 href={
-                  isExperiencePage || isPortfolioPage || isResumePage
+                  isExperiencePage || isPortfolioPage || isResumePage || isResearchPage
                     ? `${toAppPath("/")}#home`
                     : "#home"
                 }
@@ -1242,6 +1208,9 @@ function App() {
             </li>
             <li>
               <a href={toHashRoute("/experience")}>Experience</a>
+            </li>
+            <li>
+              <a href={toHashRoute("/research")}>Research</a>
             </li>
             <li>
               <a href={toHashRoute("/resume")}>Resume</a>
@@ -1345,220 +1314,40 @@ function App() {
         </div>
       )}
 
-      {!isExperiencePage && !isPortfolioPage && !isResumePage && (
+      {!isExperiencePage && !isPortfolioPage && !isResumePage && !isResearchPage && (
         <main id="home">
-          <section className="hero reveal">
-            <div className="hero-gradient-overlay">
-              <motion.div
-                className="hero-gradient-blob"
-                animate={{
-                  backgroundPosition: ["0% 0%", "100% 100%", "0% 0%"],
-                }}
-                transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-              />
+          <section className="intro-section">
+            <p className="intro-name">Zhalae Daneshvari<span>Developer · Designer · Researcher</span></p>
+            <h1>Code, design, and curiosity about <span>human health.</span></h1>
+            <p className="intro-description">I’m Zhalae, a developer, designer, and researcher exploring AI, human-centered systems, and biotechnology. I build across disciplines, with people at the center.</p>
+            <div className="hero-actions">
+              <a className="btn btn-primary" href="#selected-work">Explore my work <span aria-hidden="true">↘</span></a>
+              <a className="btn btn-ghost" href={toHashRoute("/resume")}>View résumé</a>
             </div>
-            <motion.div
-              className="hero-content"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              <motion.p
-                className="eyebrow"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2 }}
-              >
-                Personal Website
-              </motion.p>
-              <h1 aria-label="Zhalae Daneshvari, Developer and Designer">
-                <motion.span
-                  className="typing-line"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.1 }}
-                >
-                  <span className="typing-prefix">...</span>
-                  <span id="typed-name">{typedName}</span>
-                  <span className="typing-cursor" aria-hidden="true"></span>
-                </motion.span>
-                <span className="title-rotator" aria-label="Role rotating text">
-                  {ROLE_TITLES.map((title, index) => (
-                    <motion.span
-                      key={title}
-                      className={`title ${index === roleIndex ? "active" : ""}`}
-                      aria-hidden={index !== roleIndex}
-                      animate={{ opacity: index === roleIndex ? 1 : 0 }}
-                      transition={{ duration: 0.5 }}
-                    >
-                      {title}
-                    </motion.span>
-                  ))}
-                </span>
-              </h1>
-              <motion.p
-                className="subtitle"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3, duration: 0.8 }}
-              >
-                Developer and designer building digital experiences at Cornell University with a focus on
-                creative engineering and thoughtful design.
-              </motion.p>
-              <motion.div
-                className="hero-actions"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5, duration: 0.8 }}
-              >
-                <motion.a
-                  className="btn btn-primary"
-                  href={toHashRoute("/portfolio")}
-                  whileHover={{ scale: 1.05, boxShadow: "0 8px 24px rgba(50, 205, 50, 0.3)" }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  View Portfolio
-                </motion.a>
-                <motion.a
-                  className="btn btn-ghost"
-                  href="#contact"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  Get In Touch
-                </motion.a>
-              </motion.div>
-            </motion.div>
+            <p className="intro-note">Information Science · Bachelor’s May 2026 · Master’s expected December 2026</p>
           </section>
 
-          <section id="about" className="panel reveal">
-            <h2>About Me.</h2>
-            <p>
-              I am Zhalae, a developer and designer at Cornell University focused on data
-              science, UX, and interactive technology. I completed my Bachelor&apos;s in
-              Information Science in May 2026 and will finish my Master&apos;s in
-              Information Science in December 2026.
-            </p>
-            <p>
-              My work spans agentic AI for molecular risk analysis, cloud-native machine
-              learning systems, VR healthcare simulations shaped by behavioral research, and more.
-              I am especially interested in biotechnology and building products where advanced
-              modeling meets real human impact.
-            </p>
-            <div className="chips">
-              <a href={toHashRoute("/portfolio?category=Agentic%20AI&focus=agentic-ai-section")}>
-                Agentic AI
+          <section id="selected-work" className="selected-work">
+            <div className="section-heading"><div><p className="eyebrow">A few things I’m building and exploring</p><h2>Selected work</h2></div><a className="see-more-link" href={toHashRoute("/portfolio")}>Full portfolio ↗</a></div>
+            <div className="selected-grid">
+              <a className="selected-card" href={toHashRoute("/portfolio/molecular-data-chatbot")}>
+                <div className="selected-visual featured-art"><img src={toAssetPath("/featured/molecular-3d.png")} alt="" loading="lazy" width="1536" height="1024" /></div>
+                <div className="selected-copy"><p className="eyebrow">01 / AI + biotechnology</p><h3>Molecular Data Chatbot</h3><p>Connecting molecular structure and adverse-event risk through an agentic AI system at Johnson &amp; Johnson.</p><p className="contribution"><strong>My contribution</strong> Built the reasoning pipeline, integrated molecular data sources, and deployed inference on GCP.</p><span className="card-link">Explore the project ↗</span></div>
               </a>
-              <a href={toHashRoute("/portfolio?category=Data%20Science&focus=data-science-section")}>
-                Data Science
+              <a className="selected-card" href={toHashRoute("/research")}>
+                <div className="selected-visual featured-art"><img src={toAssetPath("/featured/research-vr-3d.png")} alt="" loading="lazy" width="1536" height="1024" /></div>
+                <div className="selected-copy"><p className="eyebrow">02 / Research + human experience</p><h3>Embodiment &amp; health in VR</h3><p>Investigating VR-based sensory remapping as a potential intervention for phantom limb pain with Weill Cornell Medical School.</p><p className="contribution"><strong>My contribution</strong> Leading graduate research and co-authoring an ACM CHI ’27 submission on avatar movement and social perception.</p><span className="card-link">Explore my research ↗</span></div>
               </a>
-              <a href={toHashRoute("/portfolio?category=Data%20Science&focus=data-science-section")}>
-                Machine Learning
+              <a className="selected-card" href={toHashRoute("/portfolio/pantrypal")}>
+                <div className="selected-visual featured-art"><img src={toAssetPath("/featured/pantrypal-logo-3d.png")} alt="" loading="lazy" width="1536" height="1024" /></div>
+                <div className="selected-copy"><p className="eyebrow">03 / Product design + development</p><h3>PantryPal</h3><p>An AI kitchen companion that turns the ingredients you already have into ideas for your next meal.</p><p className="contribution"><strong>My contribution</strong> Designed and built the experience, from shared inventory to Gemini-powered recipe generation.</p><span className="card-link">Explore the product ↗</span></div>
               </a>
-              <a href={toHashRoute("/portfolio?category=UX%20%2F%20HCI&focus=ux-hci-section")}>
-                UX Design
-              </a>
-              <a
-                href={toHashRoute(
-                  "/portfolio?category=Agentic%20AI&focus=molecular-data-chatbot"
-                )}
-              >
-                Biotech Applications
-              </a>
-            </div>
-            <a
-              className="repo-link"
-              href="https://github.com/ZhalaeDaneshvari/zhalae-website"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                <path
-                  fill="currentColor"
-                  d="M12 2C6.47 2 2 6.58 2 12.24c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.5v-1.73c-2.78.62-3.37-1.22-3.37-1.22-.45-1.2-1.14-1.5-1.14-1.5-.91-.64.1-.64.1-.64 1 .07 1.55 1.06 1.55 1.06.9 1.57 2.32 1.12 2.91.86.09-.67.36-1.12.64-1.38-2.23-.26-4.55-1.13-4.55-5.06 0-1.12.4-2.04 1.04-2.76-.09-.26-.45-1.31.1-2.72 0 0 .86-.29 2.82 1.05A9.6 9.6 0 0 1 12 6.4c.86 0 1.73.12 2.55.36 1.96-1.34 2.82-1.05 2.82-1.05.54 1.41.18 2.46.09 2.72.64.72 1.05 1.64 1.05 2.76 0 3.93-2.32 4.79-4.55 5.05.37.33.68.95.68 1.93v2.86c0 .28.18.6.68.5A10.31 10.31 0 0 0 22 12.24C22 6.58 17.52 2 12 2Z"
-                />
-              </svg>
-              View this website's source code
-            </a>
-          </section>
-
-          <section id="featured-project" className="panel featured-app reveal">
-            <div className="featured-app-header">
-              <a
-                className="featured-app-icon-and-title featured-app-link"
-                href="https://pantrypal-252908779850.us-central1.run.app/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <img
-                  src={toAssetPath("/pantrypal/pantrypalicon.png")}
-                  alt="PantryPal icon"
-                  className="featured-app-icon"
-                />
-                <div>
-                  <p className="eyebrow">Check Out My New App</p>
-                  <h2>PantryPal</h2>
-                </div>
-              </a>
-              <div className="featured-app-actions">
-                <a
-                  className="btn btn-primary"
-                  href="https://pantrypal-252908779850.us-central1.run.app/"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  View App
-                </a>
-                <a
-                  className="btn btn-ghost"
-                  href="https://github.com/ZhalaeDaneshvari/pantry-pal"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  View GitHub
-                </a>
-              </div>
-            </div>
-            <p className="featured-app-subtitle">
-              Your AI-Powered Kitchen Companion
-            </p>
-            <p>
-              Ever stare into your fridge with absolutely no idea what to cook? PantryPal is here to save the day. Just tell it what you've got, and let Chef (your AI sous chef) work some magic. Turning random pantry items into meals you actually want to eat.
-            </p>
-            <div className="featured-app-highlights">
-              <div className="highlight">
-                <h3>Intelligent Inventory Management</h3>
-                <p>Track your pantry, fridge, and freezer items with smart quantity suggestions and automated expiry date tracking.</p>
-              </div>
-              <div className="highlight">
-                <h3>AI Chef (Gemini Powered)</h3>
-                <p>Our custom AI "Chef Bot" analyzes your inventory to generate creative, nutritious recipes while identifying what's missing.</p>
-              </div>
-              <div className="highlight">
-                <h3>Smart Categorization</h3>
-                <p>Recipes automatically tagged for dietary needs: "Healthier Choice," "PCOS Friendly," "Low-GI," and more.</p>
-              </div>
             </div>
           </section>
 
-          <section id="experience" className="panel reveal">
-            <motion.div
-              className="experience-header"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
-            >
-              <h2>Experience</h2>
-              <motion.a
-                className="see-more-link"
-                href={toHashRoute("/experience")}
-                whileHover={{ x: 5 }}
-              >
-                See Full Timeline
-              </motion.a>
-            </motion.div>
-            <TimelineComponent experiences={EXPERIENCES.slice(0, 4)} />
+          <section id="about" className="about-brief">
+            <div><p className="eyebrow">The thread through my work</p><h2>Technical curiosity.<br />A human perspective.</h2></div>
+            <div><p>I’m drawn to questions that need more than one way of thinking. My work connects molecular data, immersive environments, and everyday tools—and moves between writing code, designing interactions, and asking research questions.</p><p>At Cornell, I’m completing my Master’s in Information Science after earning my bachelor’s in May 2026. I’m especially interested in biotechnology and how thoughtful technology can support human health.</p><a className="see-more-link" href={toHashRoute("/experience")}>Explore my experience ↗</a></div>
           </section>
 
           <section id="contact" className="panel reveal">
@@ -1601,110 +1390,42 @@ function App() {
         </main>
       )}
 
+      {isResearchPage && (
+        <main className="research-page">
+          <section className="research-intro"><p className="eyebrow">Research / Human-centered technology</p><h1>Questions about people.<br /><span>Tools to explore them.</span></h1><p className="subtitle">My research experience spans virtual embodiment, healthcare environments, and computational approaches to drug repurposing.</p></section>
+          <section className="research-list" aria-label="Research experience">
+            {[
+              { company: "Virtual Embodiment Lab", role: "Graduate Researcher", period: "August 2026 – Present", title: "Sensory remapping & phantom limb pain", question: "Leading research on VR-based sensory remapping as a potential therapeutic intervention for phantom limb pain with Weill Cornell Medical School.", contribution: "I also co-authored an ACM CHI ’27 submission examining how asymmetric transformations of avatar movement shape social behavior and perception in multi-user VR.", methods: "Virtual reality · Sensory remapping · Social behavior · Human perception" },
+              { company: "Virtual Embodiment Lab", period: "January 2025 – August 2026", title: "Embodiment, perception & pain", question: "Exploring how virtual environments relate to embodiment, acute pain modulation, and altered self-perception.", contribution: "I developed and designed advanced Unity-based VR systems for studies of human experience in virtual spaces.", methods: "Unity · Virtual reality · Experimental design · Human perception" },
+              { company: "Design + Augmented Intelligence Lab", period: "August 2024 – January 2026", title: "Healthcare spaces & human behavior", question: "Investigating environmental psychology in healthcare design and evaluating wayfinding solutions in medical settings.", contribution: "I used VR to support evaluation of healthcare environments and built Python automation scripts for behavioral data analysis.", methods: "VR research · Python · Behavioral data analysis · Healthcare UX" },
+              { company: "Albers Lab · Mass General Hospital", period: "July 2022 – May 2023", title: "Computational approaches to drug repurposing", question: "Exploring Alzheimer’s drug repurposing through electronic health record data.", contribution: "I conducted EHR-driven research and applied R and Python algorithms for computational biology analysis in collaboration with a PhD researcher.", methods: "R · Python · EHR data · Computational biology" },
+            ].map((study, index) => <article className="research-entry" key={study.company}>
+              <div className="research-meta"><span className="research-number">0{index + 1}</span><p>{study.company}</p><span>{study.period}</span><p className="eyebrow">{study.role || "Research Assistant"}</p></div>
+              <div><h2>{study.title}</h2><p>{study.question}</p><h3>My contribution</h3><p>{study.contribution}</p><p className="research-methods">{study.methods}</p></div>
+            </article>)}
+          </section>
+          <section className="research-further"><p className="eyebrow">Related work</p><h2>More ways to explore</h2><p>My portfolio also includes HCI studies and data science papers, with project details and available research materials.</p><div className="hero-actions"><a className="btn btn-ghost" href={toHashRoute("/portfolio?category=UX%20%2F%20HCI")}>HCI projects ↗</a><a className="btn btn-ghost" href={toHashRoute("/portfolio?category=Data%20Science")}>Data science papers ↗</a></div></section>
+        </main>
+      )}
+
       {isExperiencePage && (
         <main className="experience-page">
-          <section className="experience-hero reveal">
-            <p className="eyebrow">Experience Timeline</p>
-            <h1>Professional Experience</h1>
-            <TypewriterText
-              className="subtitle"
-              text="A detailed look at internships, research, and product work across machine learning, UX, and interactive technology."
-              speed={18}
-            />
-            <div className="experience-hero-actions">
-              <a className="btn btn-primary" href={toAppPath("/")}>
-                Back To Home
-              </a>
-              <a
-                className="btn btn-linkedin"
-                href="https://www.linkedin.com/in/zhalae-daneshvari-9890a3241/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                  <path
-                    fill="currentColor"
-                    d="M6.94 8.55A1.56 1.56 0 1 1 6.94 5.42a1.56 1.56 0 0 1 0 3.13ZM5.58 9.8H8.3V18H5.58V9.8Zm4.29 0H12.5v1.12h.03c.37-.7 1.28-1.43 2.63-1.43 2.81 0 3.33 1.85 3.33 4.25V18h-2.72v-3.84c0-.92-.02-2.1-1.28-2.1-1.28 0-1.47 1-1.47 2.04V18H9.87V9.8Z"
-                  />
-                </svg>
-                LinkedIn
-              </a>
-            </div>
+          <section className="experience-hero">
+            <p className="eyebrow">Experience / 2022 — Present</p><h1>Building across<br /><span className="soft-accent">disciplines.</span></h1>
+            <p className="subtitle">From molecular data to immersive environments. A path through industry, research, and teaching.</p>
+            <div className="experience-overview"><span><strong>Industry</strong> Johnson &amp; Johnson · IFF</span><span><strong>Research</strong> Cornell · Mass General Hospital</span><span><strong>Teaching</strong> Cornell Bowers</span></div>
           </section>
-
-          <section className="timeline reveal">
-            {EXPERIENCES.map((item, index) => (
-              <Fragment key={`${item.company}-${item.role}-${item.period}`}>
-                <article className={`timeline-item reveal ${index % 2 === 0 ? "left" : "right"}`}>
-                  {item.dateMark && <p className="timeline-marker">{item.dateMark}</p>}
-                  <div className="timeline-node" aria-hidden="true">
-                    {item.logo ? (
-                      <img src={toAssetPath(item.logo)} alt={`${item.company} logo`} />
-                    ) : (
-                      item.logoText
-                    )}
-                  </div>
-                  <div className="timeline-card">
-                    <p className="timeline-time">{item.period}</p>
-                    <h3>{item.role}</h3>
-                    <p className="timeline-company">{item.company}</p>
-                    <p>{item.description}</p>
-                    <div className="experience-skills timeline-skills">
-                      {item.skills.map((skill) => (
-                        <span key={`${item.company}-${skill}`} className="skill-tag">
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-                    <span className="timeline-index">{String(index + 1).padStart(2, "0")}</span>
-                  </div>
-                </article>
-                {index < EXPERIENCES.length - 1 && (
-                  <div className={`timeline-arrow ${index % 2 === 0 ? "right" : "left"}`} aria-hidden="true">
-                    {index % 2 === 0 ? (
-                      <svg viewBox="0 0 24 24" className="timeline-arrow-icon" focusable="false">
-                        <path
-                          d="M5 8H15V18"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M11 14L15 18L19 14"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    ) : (
-                      <svg viewBox="0 0 24 24" className="timeline-arrow-icon" focusable="false">
-                        <path
-                          d="M19 8H9V18"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M13 14L9 18L5 14"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    )}
-                  </div>
-                )}
-              </Fragment>
-            ))}
+          <div className="browse-toolbar" aria-label="Filter experience">
+            <div className="browse-filters">{["All roles", "Industry", "Research", "Teaching"].map(filter => <button type="button" key={filter} className={`category-pill ${experienceFilter === filter ? "active" : ""}`} aria-pressed={experienceFilter === filter} onClick={() => setExperienceFilter(filter)}>{filter}</button>)}</div>
+            <a className="see-more-link" href={toHashRoute("/resume")}>View résumé ↗</a>
+          </div>
+          <section className="career-list" aria-label="Professional experience">
+            {EXPERIENCES.filter(item => experienceFilter === "All roles" || (experienceFilter === "Research" ? item.role.includes("Research") : experienceFilter === "Teaching" ? item.role.includes("Teaching") : item.role.includes("Intern"))).map(item => <article className="career-row" key={`${item.company}-${item.role}`}>
+              <div className="career-date"><span>{item.period}</span>{item.period.includes("Present") && <span className="current-label">Current</span>}</div>
+              <div className="career-content"><div className="career-heading"><img src={toAssetPath(item.logo)} alt="" /><div><p>{item.company}</p><h2>{item.role}</h2></div></div><p className="career-description">{item.description}</p><div className="career-skills">{item.skills.map(skill => <span key={skill}>{skill}</span>)}</div></div>
+            </article>)}
           </section>
+          <p className="career-note">Interested in the questions behind the work? <a href={toHashRoute("/research")}>Explore my research ↗</a></p>
         </main>
       )}
 
@@ -1712,13 +1433,14 @@ function App() {
         <main className="portfolio-page">
           {!expandedProject && (
             <section className="portfolio-hero reveal">
-              <p className="eyebrow">Selected Work</p>
-              <h1>Portfolio</h1>
+              <p className="eyebrow">Portfolio / Selected projects & studies</p>
+              <h1>Ideas made <span className="soft-accent">real.</span></h1>
               <TypewriterText
                 className="subtitle"
-                text="A cross-disciplinary project archive spanning agentic AI, data science, UX, and immersive computing."
+                text="AI systems, thoughtful interfaces, and research-led experiments. Explore the work by discipline—or follow your curiosity."
                 speed={18}
               />
+              <label className="project-search">Find something specific<input type="search" placeholder="Search projects, tools, or topics…" value={projectQuery} onChange={event => setProjectQuery(event.target.value)} /></label>
               <div className="portfolio-categories">
                 {PORTFOLIO_CATEGORIES.map((category) => (
                   <button
@@ -1812,13 +1534,7 @@ function App() {
                 <div className="project-detail-media">
                   {expandedProject.paperLink && (
                     <figure className="project-shot project-shot--video project-shot--lead">
-                      <iframe
-                        src={toGoogleDrivePreviewUrl(expandedProject.paperLink)}
-                        title={`${expandedProject.title} PDF preview`}
-                        className={`pdf-preview ${expandedProject.category === "Data Science" ? "pdf-preview--long" : ""}`}
-                        loading="lazy"
-                        allow="autoplay"
-                      ></iframe>
+                      <DocumentPreview url={expandedProject.paperLink} title={expandedProject.title} />
                     </figure>
                   )}
 
@@ -1851,13 +1567,7 @@ function App() {
                                   allowFullScreen
                                 ></iframe>
                               ) : (
-                                <iframe
-                                  src={toGoogleDrivePreviewUrl(item.link)}
-                                  title={`${expandedProject.title} ${item.label}`}
-                                  className="media-frame"
-                                  loading="lazy"
-                                  allow="autoplay"
-                                ></iframe>
+                                <DocumentPreview url={item.link} title={item.label} />
                               )}
                             </div>
 
@@ -1984,258 +1694,24 @@ function App() {
             </section>
           )}
 
-          {!expandedProject && (selectedCategory === "Agentic AI" || selectedCategory === "All Projects") && (
-            <section id="agentic-ai-section" className="portfolio-section reveal category-switch-enter">
-              <div className="portfolio-section-header">
-                <h2>Agentic AI ({AGENTIC_PROJECTS.length} Projects)</h2>
-              </div>
-
-              <div className="project-grid">
-                {AGENTIC_PROJECTS.map((project, index) => (
-                  <ScrollRevealWrapper key={project.title} delay={index * 0.1} direction="up">
-                    <div
-                      id={project.anchorId || undefined}
-                      className="project-card-wrap"
-                    >
-                      <motion.button
-                        type="button"
-                        className="project-card project-card--preview project-card--agentic"
-                        onClick={() => {
-                          const slug = project.anchorId || slugify(project.title);
-                          setExpandedProject({
-                            ...project,
-                            category: "Agentic AI",
-                            skills: project.skills || [],
-                          });
-                          goToRoute(`/portfolio/${slug}`);
-                        }}
-                        aria-label={`View details for ${project.title}`}
-                        whileHover={{
-                          y: -8,
-                          boxShadow: "0 20px 40px rgba(50, 205, 50, 0.2)",
-                        }}
-                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                      >
-                        {(project.video || (project.images && project.images.length > 0)) && (
-                          <motion.div
-                            className="project-card-thumb"
-                            whileHover={{ scale: 1.05 }}
-                          >
-                            {project.video ? (
-                              <video
-                                src={toAssetPath(project.video)}
-                                poster={toAssetPath(project.images?.[0] || "/pantrypal/pantrypalicon.png")}
-                                muted
-                                playsInline
-                                loop
-                                autoPlay
-                                className="project-card-video-preview"
-                              />
-                            ) : (
-                              <img
-                                src={toAssetPath(project.images[0])}
-                                alt=""
-                                aria-hidden="true"
-                                loading="lazy"
-                              />
-                            )}
-                            {project.video && (
-                              <span className="project-card-video-badge">▶ Video</span>
-                            )}
-                          </motion.div>
-                        )}
-                        <div className="project-card-body">
-                          <div className="project-meta">
-                            <p className="project-date">{project.date}</p>
-                            <div className="project-title-row">
-                            <h3>{project.title}</h3>
-                            {project.clientTag && (
-                              <span className="project-client-pill">{project.clientTag}</span>
-                            )}
-                          </div>
-                        </div>
-                        <p className="project-summary project-summary--clamp">{project.summary}</p>
-                        <div className="project-skills">
-                          {project.skills.slice(0, 4).map((skill) => (
-                            <span key={`${project.title}-${skill}`} className="skill-tag">
-                              {skill}
-                            </span>
-                          ))}
-                          {project.skills.length > 4 && (
-                            <span className="skill-tag skill-tag--more">+{project.skills.length - 4}</span>
-                          )}
-                        </div>
-                        <span className="project-card-cta">View project →</span>
-                      </div>
-                    </motion.button>
-                    </div>
-                  </ScrollRevealWrapper>
-                ))}
-              </div>
-            </section>
-          )}
-
-          {!expandedProject && (selectedCategory === "UX / HCI" || selectedCategory === "All Projects") && (
-            <section id="ux-hci-section" className="portfolio-section reveal category-switch-enter">
-              <div className="portfolio-section-header">
-                <h2>UX / HCI ({HCI_VR_PROJECTS.length} Projects)</h2>
-              </div>
-
-              <div className="project-grid">
-                {HCI_VR_PROJECTS.map((project, index) => (
-                  <ScrollRevealWrapper key={project.title} delay={index * 0.1} direction="up">
-                    <div className="project-card-wrap">
-                      <motion.button
-                        type="button"
-                        className="project-card project-card--preview"
-                        onClick={() => {
-                          const slug = project.anchorId || slugify(project.title);
-                          setExpandedProject({
-                            ...project,
-                          category: "UX / HCI",
-                          skills: project.tools || [],
-                        });
-                        goToRoute(`/portfolio/${slug}`);
-                      }}
-                      aria-label={`View details for ${project.title}`}
-                      whileHover={{
-                        y: -8,
-                        boxShadow: "0 20px 40px rgba(50, 205, 50, 0.2)",
-                      }}
-                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                    >
-                      <motion.div
-                        className="project-card-thumb"
-                        whileHover={{ scale: 1.05 }}
-                      >
-                        {project.media && project.media[0]?.type === "video" ? (
-                          <>
-                            <img
-                              src={toYouTubeThumbnailUrl(project.media[0].link)}
-                              alt=""
-                              aria-hidden="true"
-                              loading="lazy"
-                            />
-                            <span className="project-card-video-badge">▶ Video</span>
-                          </>
-                        ) : project.media && project.media[0]?.type === "paper" ? (
-                          <iframe
-                            src={toGoogleDrivePreviewUrl(project.media[0].link)}
-                            title={`${project.title} preview`}
-                            className="project-card-paper-frame"
-                            loading="lazy"
-                            allow="autoplay"
-                          ></iframe>
-                        ) : project.previewImage ? (
-                          <img
-                            src={toAssetPath(project.previewImage)}
-                            alt={`${project.title} homepage preview`}
-                            loading="lazy"
-                          />
-                        ) : (
-                          <div className="project-card-fallback">Project Preview</div>
-                        )}
-                      </motion.div>
-
-                      <div className="project-card-body">
-                        <div className="project-meta">
-                          <p className="project-date">{project.date}</p>
-                          <div className="project-title-row">
-                            <h3>{project.title}</h3>
-                            <span className="project-client-pill">{project.clientTag}</span>
-                          </div>
-                        </div>
-
-                        <p className="project-summary project-summary--clamp">{project.summary}</p>
-                        <div className="project-skills">
-                          {project.tools.slice(0, 4).map((tool) => (
-                            <span key={`${project.title}-${tool}`} className="skill-tag">
-                              {tool}
-                            </span>
-                          ))}
-                          {project.tools.length > 4 && (
-                            <span className="skill-tag skill-tag--more">+{project.tools.length - 4}</span>
-                          )}
-                        </div>
-                        <span className="project-card-cta">Explore project →</span>
-                      </div>
-                    </motion.button>
-                    </div>
-                  </ScrollRevealWrapper>
-                ))}
-              </div>
-            </section>
-          )}
-
-          {!expandedProject && (selectedCategory === "Data Science" || selectedCategory === "All Projects") && (
-            <section id="data-science-section" className="portfolio-section reveal category-switch-enter">
-              <div className="portfolio-section-header">
-                <h2>Data Science (2 Papers)</h2>
-              </div>
-
-              <div className="project-grid">
-                {DATA_SCIENCE_PAPERS.map((paper, index) => (
-                  <ScrollRevealWrapper key={paper.title} delay={index * 0.1} direction="up">
-                    <div className="project-card-wrap">
-                      <motion.button
-                        type="button"
-                        className="project-card project-card--preview"
-                        onClick={() => {
-                          const slug = paper.anchorId || slugify(paper.title);
-                          setExpandedProject({
-                            ...paper,
-                            category: "Data Science",
-                            skills: paper.skills || [],
-                          });
-                          goToRoute(`/portfolio/${slug}`);
-                        }}
-                        aria-label={`View details for ${paper.title}`}
-                        whileHover={{
-                          y: -8,
-                          boxShadow: "0 20px 40px rgba(50, 205, 50, 0.2)",
-                        }}
-                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                      >
-                        <motion.div
-                          className="project-card-thumb project-card-thumb--paper"
-                          whileHover={{ scale: 1.05 }}
-                        >
-                        <iframe
-                          src={toGoogleDrivePreviewUrl(paper.paperLink)}
-                          title={`${paper.title} preview`}
-                          className="project-card-paper-frame"
-                          loading="lazy"
-                          allow="autoplay"
-                        ></iframe>
-                      </motion.div>
-                      <div className="project-card-body">
-                        <div className="project-meta">
-                          <p className="project-date">{paper.date}</p>
-                          <div className="project-title-row">
-                            <h3>{paper.title}</h3>
-                            <span className="project-client-pill">{paper.clientTag}</span>
-                          </div>
-                        </div>
-                        <p className="project-summary project-summary--clamp">{paper.summary}</p>
-                        <div className="project-skills">
-                          {paper.skills.slice(0, 4).map((skill) => (
-                            <span key={`${paper.title}-${skill}`} className="skill-tag">
-                              {skill}
-                            </span>
-                          ))}
-                          {paper.skills.length > 4 && (
-                            <span className="skill-tag skill-tag--more">+{paper.skills.length - 4}</span>
-                          )}
-                        </div>
-                        <span className="project-card-cta">Read paper details →</span>
-                      </div>
-                    </motion.button>
-                    </div>
-                  </ScrollRevealWrapper>
-                ))}
-              </div>
-            </section>
-          )}
+          {!expandedProject && (() => {
+            const projects = [
+              ...AGENTIC_PROJECTS.map(project => ({ ...project, category: "Agentic AI" })),
+              ...HCI_VR_PROJECTS.map(project => ({ ...project, category: "UX / HCI", skills: project.tools })),
+              ...DATA_SCIENCE_PAPERS.map(project => ({ ...project, category: "Data Science" })),
+            ].filter(project => (selectedCategory === "All Projects" || project.category === selectedCategory) && `${project.title} ${project.summary} ${project.skills.join(" ")}`.toLowerCase().includes(projectQuery.trim().toLowerCase()));
+            return <section className="work-collection" aria-label="Projects">
+              <p className="collection-count" role="status">{projects.length} {projects.length === 1 ? "project" : "projects"} · {selectedCategory === "All Projects" ? "Across disciplines" : selectedCategory}</p>
+              <div className="work-grid">{projects.map((project) => {
+                const preview = project.images?.[0] || project.previewImage || (project.media?.[0]?.type === "video" ? toYouTubeThumbnailUrl(project.media[0].link) : null);
+                return <a className="work-card" key={project.title} href={toHashRoute(`/portfolio/${project.anchorId || slugify(project.title)}`)}>
+                  <div className="work-image">{preview ? <img src={toAssetPath(preview)} alt="" loading="lazy" /> : <div className="paper-art" aria-hidden="true"><span>RESEARCH NOTES</span><i /><i /><i /><span>Data → questions → insight</span></div>}<span className="work-kind">{project.paperLink ? "Research paper" : project.video || project.media?.some(item => item.type === "video") ? "Project + demo" : "Project"}</span></div>
+                  <div className="work-copy"><p className="work-meta">{project.category} <span>{project.date}</span></p><h2>{project.title}</h2><p className="work-summary">{project.summary}</p><p className="work-tools">{project.skills.slice(0,3).join(" / ")}</p><span className="work-open">Explore {project.paperLink ? "paper" : "project"} <span aria-hidden="true">↗</span></span></div>
+                </a>;
+              })}</div>
+              {!projects.length && <div className="empty-projects"><h2>No matching projects</h2><p>Try another topic, or reset the filters to see everything.</p><button className="btn btn-ghost" onClick={() => {setProjectQuery(""); setSelectedCategory("All Projects");}}>Reset filters</button></div>}
+            </section>;
+          })()}
 
         </main>
       )}
@@ -2258,13 +1734,7 @@ function App() {
 
           <section className="panel reveal">
             <div className="resume-preview-wrap">
-              <iframe
-                src={toGoogleDrivePreviewUrl(RESUME_LINK)}
-                title="Resume preview"
-                className="resume-preview-frame"
-                loading="lazy"
-                referrerPolicy="strict-origin-when-cross-origin"
-              ></iframe>
+              <DocumentPreview url={RESUME_LINK} title="Résumé" />
             </div>
           </section>
         </main>

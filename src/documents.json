@@ -1,0 +1,56 @@
+{
+  "asl-glasses": [
+    "/documents/asl-glasses/page-1.jpg",
+    "/documents/asl-glasses/page-2.jpg",
+    "/documents/asl-glasses/page-3.jpg",
+    "/documents/asl-glasses/page-4.jpg",
+    "/documents/asl-glasses/page-5.jpg",
+    "/documents/asl-glasses/page-6.jpg",
+    "/documents/asl-glasses/page-7.jpg",
+    "/documents/asl-glasses/page-8.jpg",
+    "/documents/asl-glasses/page-9.jpg"
+  ],
+  "resume": [
+    "/documents/resume/page-1.jpg"
+  ],
+  "food-access": [
+    "/documents/food-access/page-01.jpg",
+    "/documents/food-access/page-02.jpg",
+    "/documents/food-access/page-03.jpg",
+    "/documents/food-access/page-04.jpg",
+    "/documents/food-access/page-05.jpg",
+    "/documents/food-access/page-06.jpg",
+    "/documents/food-access/page-07.jpg",
+    "/documents/food-access/page-08.jpg",
+    "/documents/food-access/page-09.jpg",
+    "/documents/food-access/page-10.jpg",
+    "/documents/food-access/page-11.jpg",
+    "/documents/food-access/page-12.jpg",
+    "/documents/food-access/page-13.jpg",
+    "/documents/food-access/page-14.jpg",
+    "/documents/food-access/page-15.jpg",
+    "/documents/food-access/page-16.jpg",
+    "/documents/food-access/page-17.jpg",
+    "/documents/food-access/page-18.jpg",
+    "/documents/food-access/page-19.jpg",
+    "/documents/food-access/page-20.jpg",
+    "/documents/food-access/page-21.jpg",
+    "/documents/food-access/page-22.jpg",
+    "/documents/food-access/page-23.jpg",
+    "/documents/food-access/page-24.jpg",
+    "/documents/food-access/page-25.jpg"
+  ],
+  "career-salaries": [
+    "/documents/career-salaries/page-01.jpg",
+    "/documents/career-salaries/page-02.jpg",
+    "/documents/career-salaries/page-03.jpg",
+    "/documents/career-salaries/page-04.jpg",
+    "/documents/career-salaries/page-05.jpg",
+    "/documents/career-salaries/page-06.jpg",
+    "/documents/career-salaries/page-07.jpg",
+    "/documents/career-salaries/page-08.jpg",
+    "/documents/career-salaries/page-09.jpg",
+    "/documents/career-salaries/page-10.jpg",
+    "/documents/career-salaries/page-11.jpg"
+  ]
+}
