@@ -1333,7 +1333,7 @@ function App() {
             <div className="section-heading"><div><p className="eyebrow">A few things I’m building and exploring</p><h2>Selected work</h2></div><a className="see-more-link" href={toHashRoute("/portfolio")}>Full portfolio ↗</a></div>
             <div className="selected-grid">
               <a className="selected-card" href={toHashRoute("/portfolio/molecular-data-chatbot")}>
-                <div className="selected-visual featured-art"><img src={toAssetPath("/molecular/molecular%201.jpg")} alt="" loading="lazy" width="1536" height="1024" /></div>
+                <div className="selected-visual featured-art cover-molecular"><img src={toAssetPath("/molecular/molecular%201.jpg")} alt="" loading="lazy" width="1536" height="1024" /></div>
                 <div className="selected-copy"><p className="eyebrow">01 / AI + biotechnology</p><h3>Molecular Data Chatbot</h3><p>Connecting molecular structure and adverse-event risk through an agentic AI system at Johnson &amp; Johnson.</p><span className="card-link">Explore the project ↗</span></div>
               </a>
               <a className="selected-card" href={toHashRoute("/research")}>
@@ -1341,7 +1341,7 @@ function App() {
                 <div className="selected-copy"><p className="eyebrow">02 / Research + human experience</p><h3>Embodiment &amp; health in VR</h3><p>Investigating VR-based sensory remapping as a potential intervention for phantom limb pain with Weill Cornell Medical School.</p><span className="card-link">Explore my research ↗</span></div>
               </a>
               <a className="selected-card" href={toHashRoute("/portfolio/pantrypal")}>
-                <div className="selected-visual featured-art"><img src={toAssetPath("/pantrypal/pantrypal-screenshot-01.png")} alt="" loading="lazy" width="1536" height="1024" /></div>
+                <div className="selected-visual featured-art cover-pantry"><img src={toAssetPath("/pantrypal/pantrypal-screenshot-01.png")} alt="" loading="lazy" width="1536" height="1024" /></div>
                 <div className="selected-copy"><p className="eyebrow">03 / Product design + development</p><h3>PantryPal</h3><p>An AI kitchen companion that turns the ingredients you already have into ideas for your next meal.</p><span className="card-link">Explore the product ↗</span></div>
               </a>
             </div>

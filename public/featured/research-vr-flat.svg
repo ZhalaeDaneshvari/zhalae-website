@@ -1,15 +1,41 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" fill="none">
-  <rect width="900" height="600" fill="#17191d"/>
-  <g stroke="#303638" stroke-width="1"><path d="M100 150H800M100 300H800M100 450H800M225 90V510M450 90V510M675 90V510"/></g>
-  <g stroke="#98b989" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M180 300H290L330 245H405M290 300L340 350H410M290 300L265 215L220 180M265 215L300 155M290 300L245 395L190 425M245 395L290 445"/>
-    <path d="M645 300H710L745 245H790M710 300L760 365H800"/>
-  </g>
-  <g fill="#17191d" stroke="#b9d2ab" stroke-width="3"><circle cx="180" cy="300" r="9"/><circle cx="220" cy="180" r="7"/><circle cx="300" cy="155" r="7"/><circle cx="190" cy="425" r="7"/><circle cx="290" cy="445" r="7"/><circle cx="790" cy="245" r="7"/><circle cx="800" cy="365" r="7"/></g>
-  <path d="M405 230V207C405 166 444 140 490 140H529C577 140 615 166 615 207V230" stroke="#647266" stroke-width="12"/>
-  <rect x="375" y="225" width="280" height="150" rx="42" fill="#242c27" stroke="#bdd3b3" stroke-width="4"/>
-  <path d="M404 297C404 274 421 260 444 260H472C495 260 507 274 507 297C507 320 495 334 472 334H444C421 334 404 320 404 297ZM525 297C525 274 537 260 560 260H588C611 260 627 274 627 297C627 320 611 334 588 334H560C537 334 525 320 525 297Z" fill="#17191d" stroke="#7d9477" stroke-width="2"/>
-  <path d="M460 410H568" stroke="#647266" stroke-width="2"/>
-  <circle cx="290" cy="300" r="12" fill="#a8d18c"/>
-  <g fill="#acb8ae" font-family="monospace" font-size="13" letter-spacing="3"><text x="100" y="100">PERCEPTION</text><text x="635" y="500">VIRTUAL REALITY</text></g>
+<title>Conceptual illustration of VR sensory remapping research</title>
+<desc>A seated participant with an upper-limb amputation wears a VR headset. A line connects the headset to a panel representing a virtual arm. This is a conceptual illustration, not a study protocol or treatment outcome.</desc>
+<rect width="900" height="600" fill="#17191d"/>
+<g font-family="Arial, sans-serif" fill="#dce4dd">
+<text x="65" y="66" font-size="17" letter-spacing="2">VR SENSORY REMAPPING</text>
+<text x="65" y="96" font-size="13" fill="#9ea9a1">Conceptual study illustration</text>
+</g>
+<!-- Seated participant and chair, shown in a restrained side view. -->
+<g stroke-linecap="round" stroke-linejoin="round">
+<path d="M156 284V404H299M171 406V448M286 406V448" stroke="#66726b" stroke-width="11"/>
+<path d="M204 284L220 372H290L324 432H363" stroke="#b7c7ba" stroke-width="27"/>
+<path d="M207 287L206 363" stroke="#b7c7ba" stroke-width="48"/>
+<path d="M213 281L253 318" stroke="#b7c7ba" stroke-width="23"/>
+<!-- Rounded residual upper limb; no prosthesis or injury detail. -->
+<path d="M197 283L175 327" stroke="#d1ddd1" stroke-width="21"/>
+<path d="M213 264V280" stroke="#c6d4c7" stroke-width="22"/>
+<circle cx="213" cy="228" r="35" fill="#c6d4c7"/>
+<path d="M181 216Q191 178 219 190" stroke="#738770" stroke-width="8"/>
+<rect x="205" y="205" width="63" height="34" rx="10" fill="#303e32" stroke="#b0d39b" stroke-width="3"/>
+<path d="M184 215H205" stroke="#738770" stroke-width="7"/>
+<path d="M116 454H390" stroke="#3f4942" stroke-width="2"/>
+<!-- Information link, not an asserted therapeutic effect. -->
+<path d="M282 221H409Q436 221 453 241L487 277" stroke="#a9cc94" stroke-width="2" stroke-dasharray="6 8"/>
+<path d="M473 274L489 279L488 263" stroke="#a9cc94" stroke-width="2"/>
+</g>
+<!-- Virtual arm view -->
+<rect x="501" y="166" width="329" height="284" rx="18" fill="#1d2420" stroke="#5c6f5e" stroke-width="2"/>
+<path d="M526 189H551M526 189V214M805 189H780M805 189V214M526 426H551M526 426V401M805 426H780M805 426V401" stroke="#71886b" stroke-width="2"/>
+<g stroke="#b7dba3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+<path d="M552 374L623 332L673 285L689 262L694 237Q697 229 702 235L703 259L712 229Q716 221 720 229L716 262L732 238Q738 232 741 240L727 270L745 254Q753 250 754 259L733 285L708 306L683 313L648 362L578 402" fill="#314532"/>
+<path d="M677 285L663 270Q656 261 650 266Q646 270 652 278L665 300"/>
+<path d="M683 313L668 305" stroke="#7d9a71"/>
+</g>
+<g font-family="Arial, sans-serif" text-anchor="middle">
+<text x="261" y="512" fill="#dce4dd" font-size="19">Participant in VR</text>
+<text x="261" y="538" fill="#9ea9a1" font-size="13">Upper-limb amputation</text>
+<text x="665" y="490" fill="#dce4dd" font-size="19">Virtual arm representation</text>
+<text x="665" y="516" fill="#9ea9a1" font-size="13">Exploring sensory remapping</text>
+</g>
 </svg>
