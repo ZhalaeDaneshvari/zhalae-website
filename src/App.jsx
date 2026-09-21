@@ -1,3 +1,4 @@
+import ResearchStories from "./ResearchStories";
 import documentPages from "./documents.json";
 import { Fragment, useEffect, useState, useRef } from "react";
 import { motion, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion";
@@ -105,10 +106,10 @@ const EXPERIENCES = [
     period: "July 2022 - May 2023",
     dateMark: "2023",
     description:
-      "Conducted EHR-driven Alzheimer's drug repurposing research and applied R/Python algorithms for computational biology analysis in collaboration with a PhD researcher.",
+      "Contributed to DRIAD-SP, investigating Alzheimer’s drug repurposing through systems pharmacology approaches. Applied R and Python to computational biology analysis in collaboration with a PhD researcher.",
     logoText: "MGH",
     logo: "/mgh.jpeg",
-    skills: ["R", "Python", "EHR Data", "Computational Biology"],
+    skills: ["R", "Python", "Systems Pharmacology", "Computational Biology"],
     filters: ["Data Science"],
   },
 ];
@@ -1384,18 +1385,8 @@ function App() {
 
       {isResearchPage && (
         <main className="research-page">
-          <section className="research-intro"><p className="eyebrow">Research / Human-centered technology</p><h1>Questions about people.<br /><span>Tools to explore them.</span></h1><p className="subtitle">My research experience spans virtual embodiment, healthcare environments, and computational approaches to drug repurposing.</p></section>
-          <section className="research-list" aria-label="Research experience">
-            {[
-              { company: "Virtual Embodiment Lab", role: "Graduate Researcher", period: "August 2026 – Present", title: "Sensory remapping & phantom limb pain", question: "Leading research on VR-based sensory remapping as a potential therapeutic intervention for phantom limb pain with Weill Cornell Medical School.", contribution: ["I lead this study as my independent master’s research. I shadow doctors to inform the work, develop the study design, and create a novel sensory-remapping technique and research method. I am working through the pilot-study process with the aim of progressing to a longitudinal study.", "I also co-authored an ACM CHI ’27 submission examining how asymmetric transformations of avatar movement shape social behavior and perception in multi-user VR.", "Alongside this work, I am collaborating with a PhD student at Cornell Tech on an AI guide project exploring how AR glasses and AI can assist people who are blind."], methods: "Virtual reality · Sensory remapping · Social behavior · Human perception" },
-              { company: "Virtual Embodiment Lab", period: "January 2025 – August 2026", title: "Embodiment, perception & pain", question: "Exploring how virtual environments relate to embodiment, acute pain modulation, and altered self-perception.", contribution: ["I developed and designed Unity-based VR systems for studies of embodiment, acute pain modulation, and altered self-perception.", "I also created a website for a disability-focused VR showcase supporting neurodiverse participants. For a historical restoration initiative focused on Pompeii, I designed 3D models of Roman figures with an emphasis on historical accuracy."], methods: "Unity · Virtual reality · Experimental design · Human perception" },
-              { company: "Design + Augmented Intelligence Lab", period: "August 2024 – January 2026", title: "Healthcare spaces & human behavior", question: "Investigating environmental psychology in healthcare design and evaluating wayfinding solutions in medical settings.", contribution: ["I used VR to evaluate healthcare environments and wayfinding solutions, and built Python automation scripts for behavioral data analysis.", "I helped write manuscripts for research papers, led participant recruitment, and ran studies."], methods: "VR research · Python · Behavioral data analysis · Healthcare UX" },
-              { company: "Albers Lab · Mass General Hospital", period: "July 2022 – May 2023", title: "Computational approaches to drug repurposing", question: "Exploring Alzheimer’s drug repurposing through electronic health record data.", contribution: "I conducted EHR-driven research and applied R and Python algorithms for computational biology analysis in collaboration with a PhD researcher.", methods: "R · Python · EHR data · Computational biology" },
-            ].map((study, index) => <article className="research-entry" key={study.company}>
-              <div className="research-meta"><span className="research-number">0{index + 1}</span><p>{study.company}</p><span>{study.period}</span><p className="eyebrow">{study.role || "Research Assistant"}</p></div>
-              <div><h2>{study.title}</h2><p>{study.question}</p><h3>My contribution</h3>{(Array.isArray(study.contribution) ? study.contribution : [study.contribution]).map(paragraph => <p key={paragraph}>{paragraph}</p>)}<p className="research-methods">{study.methods}</p></div>
-            </article>)}
-          </section>
+          <section className="research-intro"><p className="eyebrow">Research / Human-centered technology</p><h1>Questions about people.<br /><span>Tools to explore them.</span></h1><p className="subtitle">I study how technology can change the way we experience our bodies, navigate care, and investigate disease. These are the questions, methods, and motivations behind that work.</p></section>
+          <ResearchStories />
           <section className="research-further"><p className="eyebrow">Related work</p><h2>More ways to explore</h2><p>My portfolio also includes HCI studies and data science papers, with project details and available research materials.</p><div className="hero-actions"><a className="btn btn-ghost" href={toHashRoute("/portfolio?category=UX%20%2F%20HCI")}>HCI projects ↗</a><a className="btn btn-ghost" href={toHashRoute("/portfolio?category=Data%20Science")}>Data science papers ↗</a></div></section>
         </main>
       )}

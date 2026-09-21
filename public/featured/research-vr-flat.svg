@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" fill="none">
 <title>Conceptual illustration of VR sensory remapping research</title>
-<desc>A seated participant with an upper-limb amputation wears a VR headset. A line connects the headset to a panel representing a virtual arm. This is a conceptual illustration, not a study protocol or treatment outcome.</desc>
+<desc>A seated participant with two bent legs, one intact arm resting on their thigh, and one rounded residual upper limb wears a VR headset. Arrows connect the headset and residual limb to a panel representing a virtual arm. This is a conceptual illustration, not a study protocol or treatment outcome.</desc>
 <rect width="900" height="600" fill="#17191d"/>
 <g font-family="Arial, sans-serif" fill="#dce4dd">
 <text x="65" y="66" font-size="17" letter-spacing="2">VR SENSORY REMAPPING</text>
@@ -8,29 +8,40 @@
 </g>
 <!-- Seated participant and chair, shown in a restrained side view. -->
 <g stroke-linecap="round" stroke-linejoin="round">
-<path d="M156 284V404H299M171 406V448M286 406V448" stroke="#66726b" stroke-width="11"/>
-<path d="M204 284L220 372H290L324 432H363" stroke="#b7c7ba" stroke-width="27"/>
-<path d="M207 287L206 363" stroke="#b7c7ba" stroke-width="48"/>
-<path d="M213 281L253 318" stroke="#b7c7ba" stroke-width="23"/>
-<!-- Rounded residual upper limb; no prosthesis or injury detail. -->
-<path d="M197 283L175 327" stroke="#d1ddd1" stroke-width="21"/>
-<path d="M213 264V280" stroke="#c6d4c7" stroke-width="22"/>
-<circle cx="213" cy="228" r="35" fill="#c6d4c7"/>
-<path d="M181 216Q191 178 219 190" stroke="#738770" stroke-width="8"/>
-<rect x="205" y="205" width="63" height="34" rx="10" fill="#303e32" stroke="#b0d39b" stroke-width="3"/>
-<path d="M184 215H205" stroke="#738770" stroke-width="7"/>
+<!-- Chair and two compact, bent legs, with feet grounded. -->
+<path d="M160 282V367H290M173 369V446M281 369V446" stroke="#66726b" stroke-width="10"/>
+<path d="M211 349L283 359L291 430" stroke="#859d8b" stroke-width="24"/>
+<path d="M291 435H315" stroke="#859d8b" stroke-width="16"/>
+<path d="M200 354H266L268 437" stroke="#b7c7ba" stroke-width="27"/>
+<path d="M268 440H300" stroke="#b7c7ba" stroke-width="16"/>
+<!-- Torso, neck and profile. -->
+<path d="M184 277Q202 266 223 278L232 350Q207 364 181 350Z" fill="#9fb5a5"/>
+<path d="M207 253V276" stroke="#c6d4c7" stroke-width="18"/>
+<circle cx="213" cy="225" r="31" fill="#c6d4c7"/>
+<!-- Intact far arm: shoulder, elbow, forearm and hand resting on thigh. -->
+<path d="M223 285L239 324L275 340" stroke="#b7c7ba" stroke-width="17"/>
+<path d="M272 333L285 336L296 344Q299 347 296 350L279 346L270 342Z" fill="#d1ddd1"/>
+<path d="M282 340L291 344M279 343L287 347" stroke="#859d8b" stroke-width="1.4"/>
+<!-- Near arm ends above the elbow in a rounded residual limb. -->
+<path d="M188 286L178 310" stroke="#d1ddd1" stroke-width="21"/>
+<path d="M183 211Q190 183 213 189" stroke="#738770" stroke-width="7"/>
+<rect x="205" y="205" width="54" height="30" rx="8" fill="#303e32" stroke="#b0d39b" stroke-width="3"/>
+<path d="M185 215H205" stroke="#738770" stroke-width="6"/>
 <path d="M116 454H390" stroke="#3f4942" stroke-width="2"/>
 <!-- Information link, not an asserted therapeutic effect. -->
 <path d="M282 221H409Q436 221 453 241L487 277" stroke="#a9cc94" stroke-width="2" stroke-dasharray="6 8"/>
 <path d="M473 274L489 279L488 263" stroke="#a9cc94" stroke-width="2"/>
 </g>
+<!-- Residual-limb link travels below the seated figure to keep the anatomy clear. -->
+<path d="M168 316C113 331 115 473 180 478H403Q452 478 475 435L490 406" stroke="#a9cc94" stroke-width="2" stroke-dasharray="6 8" stroke-linecap="round"/>
+<path d="M477 411L491 403L492 420" stroke="#a9cc94" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 <!-- Virtual arm view -->
 <rect x="501" y="166" width="329" height="284" rx="18" fill="#1d2420" stroke="#5c6f5e" stroke-width="2"/>
 <path d="M526 189H551M526 189V214M805 189H780M805 189V214M526 426H551M526 426V401M805 426H780M805 426V401" stroke="#71886b" stroke-width="2"/>
 <g stroke="#b7dba3" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-<path d="M552 374L623 332L673 285L689 262L694 237Q697 229 702 235L703 259L712 229Q716 221 720 229L716 262L732 238Q738 232 741 240L727 270L745 254Q753 250 754 259L733 285L708 306L683 313L648 362L578 402" fill="#314532"/>
-<path d="M677 285L663 270Q656 261 650 266Q646 270 652 278L665 300"/>
-<path d="M683 313L668 305" stroke="#7d9a71"/>
+<!-- Forearm widens into a palm with four fingers and an opposing thumb. -->
+<path d="M634 402L643 342Q626 332 619 315L604 294Q600 287 606 283Q611 280 616 287L633 305Q637 309 641 305L641 244Q641 234 647 234Q654 234 654 244L656 287L658 236Q658 226 665 226Q672 226 672 236L672 285L678 242Q679 233 685 234Q692 235 690 244L686 288L696 258Q699 251 705 253Q711 256 708 264L696 312Q691 334 679 345L684 402Z" fill="#314532"/>
+<path d="M645 335Q657 342 678 338M643 309Q653 308 660 316" stroke="#7d9a71" stroke-width="2"/>
 </g>
 <g font-family="Arial, sans-serif" text-anchor="middle">
 <text x="261" y="512" fill="#dce4dd" font-size="19">Participant in VR</text>

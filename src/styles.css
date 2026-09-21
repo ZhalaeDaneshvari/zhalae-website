@@ -2526,3 +2526,14 @@ body[data-theme="dark"] { --lime: #88e788; --lime-bright: #a9efa9; --lime-soft: 
 /* Recolor only the homepage covers, preserving the original screenshots. */
 .cover-molecular img { filter: hue-rotate(95deg) saturate(.38); }
 .cover-pantry img { filter: hue-rotate(65deg) saturate(.4); }
+
+/* Research stories: comfortable reading with quiet, contextual citations. */
+.research-story { max-width: 70ch; }
+.research-story h3 { font-size: 1rem; margin: 1.8rem 0 .55rem; letter-spacing: -.015em; }
+.research-story p { margin: 0 0 1rem; }
+.research-story p a { font-size: .78em; text-underline-offset: 3px; color: var(--text); white-space: normal; }
+.research-story .research-methods { border-top: 1px solid var(--border); padding-top: 1rem; margin-top: 1.8rem; }
+.research-read-more { display: inline-flex; align-items: center; gap: .75rem; min-height: 44px; padding: .5rem 0; border: 0; background: transparent; color: var(--text); font: inherit; font-size: .875rem; font-weight: 600; cursor: pointer; }
+.research-read-more:hover { text-decoration: underline; text-underline-offset: 4px; }
+.research-read-more:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; border-radius: 2px; }
+.research-details:not([hidden]) { padding-top: .75rem; }
