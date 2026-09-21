@@ -10,7 +10,7 @@ const EXPERIENCES = [
     role: "Graduate Researcher",
     period: "August 2026 - Present",
     dateMark: "Present",
-    description: "Leading research on VR-based sensory remapping as a potential therapeutic intervention for phantom limb pain with Weill Cornell Medical School. Co-authored an ACM CHI ’27 submission examining how asymmetric transformations of avatar movement shape social behavior and perception in multi-user VR.",
+    description: "Leading an independent master’s research study on VR-based sensory remapping for phantom limb pain with Weill Cornell Medical School. Shadowing doctors, developing a novel technique and study methodology, and working through pilot studies toward a longitudinal study. Co-authored an ACM CHI ’27 submission on avatar movement and social perception. Also collaborating with a Cornell Tech PhD student on an AI guide using AR glasses to assist people who are blind.",
     logo: "/vel.jpeg", logoText: "VEL",
     skills: ["Virtual Reality", "Sensory Remapping", "Human Perception", "HCI Research"],
     filters: ["UX"],
@@ -33,7 +33,7 @@ const EXPERIENCES = [
     period: "January 2025 - August 2026",
     dateMark: "",
     description:
-      "Developed and designed advanced Unity-based VR systems for studies on embodiment, acute pain modulation, and altered self-perception in virtual spaces.",
+      "Developed Unity-based VR systems for studies of embodiment, acute pain modulation, and altered self-perception. Created a website for a disability-focused VR showcase supporting neurodiverse participants, and designed historically informed 3D Roman figures for a Pompeii restoration initiative.",
     logoText: "VEL",
     logo: "/vel.jpeg",
     skills: ["Unity", "VR", "Experimental Design", "Human Perception"],
@@ -69,7 +69,7 @@ const EXPERIENCES = [
     period: "August 2024 - January 2026",
     dateMark: "",
     description:
-      "Researched environmental psychology in healthcare design and evaluated way-finding solutions in medical settings using VR, plus built Python automation scripts for behavioral data analysis.",
+      "Researched environmental psychology and evaluated healthcare wayfinding with VR. Helped write research manuscripts, led participant recruitment, ran studies, and built Python automation scripts for behavioral data analysis.",
     logoText: "DAIL",
     logo: "/dail.png",
     skills: ["Python", "VR Research", "Healthcare UX", "Data Analysis"],
@@ -820,7 +820,6 @@ function App() {
   const [expandedProject, setExpandedProject] = useState(null);
   const [detailImageIndex, setDetailImageIndex] = useState(0);
   const [experienceFilter, setExperienceFilter] = useState("All roles");
-  const [projectQuery, setProjectQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All Projects");
   const [isPaletteOpen, setIsPaletteOpen] = useState(false);
   const [paletteQuery, setPaletteQuery] = useState("");
@@ -1397,13 +1396,13 @@ function App() {
           <section className="research-intro"><p className="eyebrow">Research / Human-centered technology</p><h1>Questions about people.<br /><span>Tools to explore them.</span></h1><p className="subtitle">My research experience spans virtual embodiment, healthcare environments, and computational approaches to drug repurposing.</p></section>
           <section className="research-list" aria-label="Research experience">
             {[
-              { company: "Virtual Embodiment Lab", role: "Graduate Researcher", period: "August 2026 – Present", title: "Sensory remapping & phantom limb pain", question: "Leading research on VR-based sensory remapping as a potential therapeutic intervention for phantom limb pain with Weill Cornell Medical School.", contribution: "I also co-authored an ACM CHI ’27 submission examining how asymmetric transformations of avatar movement shape social behavior and perception in multi-user VR.", methods: "Virtual reality · Sensory remapping · Social behavior · Human perception" },
-              { company: "Virtual Embodiment Lab", period: "January 2025 – August 2026", title: "Embodiment, perception & pain", question: "Exploring how virtual environments relate to embodiment, acute pain modulation, and altered self-perception.", contribution: "I developed and designed advanced Unity-based VR systems for studies of human experience in virtual spaces.", methods: "Unity · Virtual reality · Experimental design · Human perception" },
-              { company: "Design + Augmented Intelligence Lab", period: "August 2024 – January 2026", title: "Healthcare spaces & human behavior", question: "Investigating environmental psychology in healthcare design and evaluating wayfinding solutions in medical settings.", contribution: "I used VR to support evaluation of healthcare environments and built Python automation scripts for behavioral data analysis.", methods: "VR research · Python · Behavioral data analysis · Healthcare UX" },
+              { company: "Virtual Embodiment Lab", role: "Graduate Researcher", period: "August 2026 – Present", title: "Sensory remapping & phantom limb pain", question: "Leading research on VR-based sensory remapping as a potential therapeutic intervention for phantom limb pain with Weill Cornell Medical School.", contribution: ["I lead this study as my independent master’s research. I shadow doctors to inform the work, develop the study design, and create a novel sensory-remapping technique and research method. I am working through the pilot-study process with the aim of progressing to a longitudinal study.", "I also co-authored an ACM CHI ’27 submission examining how asymmetric transformations of avatar movement shape social behavior and perception in multi-user VR.", "Alongside this work, I am collaborating with a PhD student at Cornell Tech on an AI guide project exploring how AR glasses and AI can assist people who are blind."], methods: "Virtual reality · Sensory remapping · Social behavior · Human perception" },
+              { company: "Virtual Embodiment Lab", period: "January 2025 – August 2026", title: "Embodiment, perception & pain", question: "Exploring how virtual environments relate to embodiment, acute pain modulation, and altered self-perception.", contribution: ["I developed and designed Unity-based VR systems for studies of embodiment, acute pain modulation, and altered self-perception.", "I also created a website for a disability-focused VR showcase supporting neurodiverse participants. For a historical restoration initiative focused on Pompeii, I designed 3D models of Roman figures with an emphasis on historical accuracy."], methods: "Unity · Virtual reality · Experimental design · Human perception" },
+              { company: "Design + Augmented Intelligence Lab", period: "August 2024 – January 2026", title: "Healthcare spaces & human behavior", question: "Investigating environmental psychology in healthcare design and evaluating wayfinding solutions in medical settings.", contribution: ["I used VR to evaluate healthcare environments and wayfinding solutions, and built Python automation scripts for behavioral data analysis.", "I helped write manuscripts for research papers, led participant recruitment, and ran studies."], methods: "VR research · Python · Behavioral data analysis · Healthcare UX" },
               { company: "Albers Lab · Mass General Hospital", period: "July 2022 – May 2023", title: "Computational approaches to drug repurposing", question: "Exploring Alzheimer’s drug repurposing through electronic health record data.", contribution: "I conducted EHR-driven research and applied R and Python algorithms for computational biology analysis in collaboration with a PhD researcher.", methods: "R · Python · EHR data · Computational biology" },
             ].map((study, index) => <article className="research-entry" key={study.company}>
               <div className="research-meta"><span className="research-number">0{index + 1}</span><p>{study.company}</p><span>{study.period}</span><p className="eyebrow">{study.role || "Research Assistant"}</p></div>
-              <div><h2>{study.title}</h2><p>{study.question}</p><h3>My contribution</h3><p>{study.contribution}</p><p className="research-methods">{study.methods}</p></div>
+              <div><h2>{study.title}</h2><p>{study.question}</p><h3>My contribution</h3>{(Array.isArray(study.contribution) ? study.contribution : [study.contribution]).map(paragraph => <p key={paragraph}>{paragraph}</p>)}<p className="research-methods">{study.methods}</p></div>
             </article>)}
           </section>
           <section className="research-further"><p className="eyebrow">Related work</p><h2>More ways to explore</h2><p>My portfolio also includes HCI studies and data science papers, with project details and available research materials.</p><div className="hero-actions"><a className="btn btn-ghost" href={toHashRoute("/portfolio?category=UX%20%2F%20HCI")}>HCI projects ↗</a><a className="btn btn-ghost" href={toHashRoute("/portfolio?category=Data%20Science")}>Data science papers ↗</a></div></section>
@@ -1442,7 +1441,6 @@ function App() {
                 text="AI systems, thoughtful interfaces, and research-led experiments. Explore the work by discipline, or follow your curiosity."
                 speed={18}
               />
-              <label className="project-search">Find something specific<input type="search" placeholder="Search projects, tools, or topics…" value={projectQuery} onChange={event => setProjectQuery(event.target.value)} /></label>
               <div className="portfolio-categories">
                 {PORTFOLIO_CATEGORIES.map((category) => (
                   <button
@@ -1701,7 +1699,7 @@ function App() {
               ...AGENTIC_PROJECTS.map(project => ({ ...project, category: "Agentic AI" })),
               ...HCI_VR_PROJECTS.map(project => ({ ...project, category: "UX / HCI", skills: project.tools })),
               ...DATA_SCIENCE_PAPERS.map(project => ({ ...project, category: "Data Science" })),
-            ].filter(project => (selectedCategory === "All Projects" || project.category === selectedCategory) && `${project.title} ${project.summary} ${project.skills.join(" ")}`.toLowerCase().includes(projectQuery.trim().toLowerCase()));
+            ].filter(project => (selectedCategory === "All Projects" || project.category === selectedCategory));
             return <section className="work-collection" aria-label="Projects">
               <p className="collection-count" role="status">{projects.length} {projects.length === 1 ? "project" : "projects"} · {selectedCategory === "All Projects" ? "Across disciplines" : selectedCategory}</p>
               <div className="work-grid">{projects.map((project) => {
@@ -1711,7 +1709,6 @@ function App() {
                   <div className="work-copy"><p className="work-meta">{project.category} <span>{project.date}</span></p><h2>{project.title}</h2><p className="work-summary">{project.summary}</p><p className="work-tools">{project.skills.slice(0,3).join(" / ")}</p><span className="work-open">Explore {project.paperLink ? "paper" : "project"} <span aria-hidden="true">↗</span></span></div>
                 </a>;
               })}</div>
-              {!projects.length && <div className="empty-projects"><h2>No matching projects</h2><p>Try another topic, or reset the filters to see everything.</p><button className="btn btn-ghost" onClick={() => {setProjectQuery(""); setSelectedCategory("All Projects");}}>Reset filters</button></div>}
             </section>;
           })()}
 
