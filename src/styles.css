@@ -2552,3 +2552,7 @@ body[data-theme="dark"] { --lime: #88e788; --lime-bright: #a9efa9; --lime-soft: 
 .project-features p { color: var(--muted); line-height: 1.7; font-size: .9rem; }
 .cover-pantry img { filter: none; }
 .featured-art video { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top center; pointer-events: none; }
+.card-main-link { display: flex; flex-direction: column; flex: 1; color: inherit; text-decoration: none; min-width: 0; }
+.card-app-link { display: block; margin: 0 1.5rem 1.5rem; padding: .7rem 1rem; border: 1px solid var(--lime); border-radius: 8px; color: var(--lime); font-size: .85rem; font-weight: 600; text-decoration: none; text-align: center; }
+.card-app-link:hover { background: var(--lime-soft); }
+.research-entry > .research-story p.research-methods { color: var(--lime); font-family: "IBM Plex Mono", monospace; }

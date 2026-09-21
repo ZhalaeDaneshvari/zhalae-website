@@ -239,6 +239,8 @@ const AGENTIC_PROJECTS = [
   },
   {
     anchorId: "pantrypal",
+    appLink: "https://pantrypal.ai.studio/",
+    appCta: "Check out the app ↗",
     title: "PantryPal",
     date: "May 2026 · Updated September 2026",
     clientTag: "Personal Project",
@@ -1369,10 +1371,10 @@ function App() {
                 <div className="selected-visual featured-art"><img src={toAssetPath("/featured/research-vr-flat.svg")} alt="" loading="lazy" width="1536" height="1024" /></div>
                 <div className="selected-copy"><p className="eyebrow">02 / Research + human experience</p><h3>Embodiment &amp; health in VR</h3><p>Investigating VR-based sensory remapping as a potential intervention for phantom limb pain with Weill Cornell Medical School.</p><span className="card-link">Explore my research ↗</span></div>
               </a>
-              <a className="selected-card" href={toHashRoute("/portfolio/pantrypal")}>
+              <article className="selected-card"><a className="card-main-link" href={toHashRoute("/portfolio/pantrypal")}>
                 <div className="selected-visual featured-art cover-pantry"><CoverVideo src="/pantrypal/pantry-preview.mp4" poster="/pantrypal/pantry-overview.png" /></div>
                 <div className="selected-copy"><p className="eyebrow">03 / Product design + development</p><h3>PantryPal</h3><p>A PCOS-focused kitchen companion for AI recipe ideas, meal planning, and daily check-ins.</p><span className="card-link">Explore the product ↗</span></div>
-              </a>
+              </a><a className="card-app-link" href="https://pantrypal.ai.studio/" target="_blank" rel="noreferrer">Check out the app ↗</a></article>
             </div>
           </section>
 
@@ -1726,10 +1728,10 @@ function App() {
               <p className="collection-count" role="status">{projects.length} {projects.length === 1 ? "project" : "projects"} · {selectedCategory === "All Projects" ? "Across disciplines" : selectedCategory}</p>
               <div className="work-grid">{projects.map((project) => {
                 const preview = project.images?.[0] || project.previewImage || (project.media?.[0]?.type === "video" ? toYouTubeThumbnailUrl(project.media[0].link) : null);
-                return <a className="work-card" key={project.title} href={toHashRoute(`/portfolio/${project.anchorId || slugify(project.title)}`)}>
+                return <article className="work-card" key={project.title}><a className="card-main-link" href={toHashRoute(`/portfolio/${project.anchorId || slugify(project.title)}`)}>
                   <div className="work-image">{preview ? <img src={toAssetPath(preview)} alt="" loading="lazy" /> : <div className="paper-art" aria-hidden="true"><span>RESEARCH NOTES</span><i /><i /><i /><span>Data → questions → insight</span></div>}<span className="work-kind">{project.paperLink ? "Research paper" : project.video || project.media?.some(item => item.type === "video") ? "Project + demo" : "Project"}</span></div>
                   <div className="work-copy"><p className="work-meta">{project.category} <span>{project.date}</span></p><h2>{project.title}</h2><p className="work-summary">{project.summary}</p><p className="work-tools">{project.skills.slice(0,3).join(" / ")}</p><span className="work-open">Explore {project.paperLink ? "paper" : "project"} <span aria-hidden="true">↗</span></span></div>
-                </a>;
+                </a>{project.anchorId === "pantrypal" && <a className="card-app-link" href={project.appLink} target="_blank" rel="noreferrer">Check out the app ↗</a>}</article>;
               })}</div>
             </section>;
           })()}
