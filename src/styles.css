@@ -2537,3 +2537,18 @@ body[data-theme="dark"] { --lime: #88e788; --lime-bright: #a9efa9; --lime-soft: 
 .research-read-more:hover { text-decoration: underline; text-underline-offset: 4px; }
 .research-read-more:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; border-radius: 2px; }
 .research-details:not([hidden]) { padding-top: .75rem; }
+
+/* Consistent code-style skill labels across every discipline. */
+.skill-tag, .skill-tag:hover, .work-copy .work-tools, .research-story .research-methods, .timeline-skills {
+  color: var(--lime); font-family: "IBM Plex Mono", monospace;
+}
+.skill-tag, .skill-tag:hover { background: transparent; border: 0; border-radius: 0; padding: 0; font-size: .7rem; box-shadow: none; transform: none; }
+.project-skills { gap: .5rem 1rem; }
+.company-name-link { color: inherit; text-decoration: none; transition: color .15s; }
+.company-name-link:hover, .company-name-link:focus-visible { color: var(--lime); text-decoration: underline; text-underline-offset: 4px; }
+.company-logo-link { display: inline-flex; border-radius: 12px; }
+.company-logo-link:hover, .company-logo-link:focus-visible { outline: 2px solid var(--lime); outline-offset: 4px; }
+.project-features h3 { font-size: 1rem; margin: 1.5rem 0 .5rem; }
+.project-features p { color: var(--muted); line-height: 1.7; font-size: .9rem; }
+.cover-pantry img { filter: none; }
+.featured-art video { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top center; pointer-events: none; }

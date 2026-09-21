@@ -8,6 +8,7 @@ const NAME_TO_TYPE = "Zhalae Daneshvari";
 const EXPERIENCES = [
   {
     company: "Virtual Embodiment Lab",
+    website: "https://virtualembodimentlab.com/",
     role: "Graduate Researcher",
     period: "August 2026 - Present",
     dateMark: "Present",
@@ -18,6 +19,7 @@ const EXPERIENCES = [
   },
   {
     company: "Cornell Bowers",
+    website: "https://bowers.cornell.edu/",
     role: "Graduate Teaching Assistant",
     period: "August 2026 - Present",
     dateMark: "Present",
@@ -30,6 +32,7 @@ const EXPERIENCES = [
   },
   {
     company: "Virtual Embodiment Lab",
+    website: "https://virtualembodimentlab.com/",
     role: "Research Assistant",
     period: "January 2025 - August 2026",
     dateMark: "",
@@ -42,6 +45,7 @@ const EXPERIENCES = [
   },
   {
     company: "Johnson & Johnson",
+    website: "https://www.jnj.com/",
     role: "Digital Measures & Biosensors Intern",
     period: "May 2026 - August 2026",
     dateMark: "2026",
@@ -54,6 +58,7 @@ const EXPERIENCES = [
   },
   {
     company: "Cornell Bowers",
+    website: "https://bowers.cornell.edu/",
     role: "Undergraduate Teaching Assistant",
     period: "August 2024 - May 2026",
     dateMark: "",
@@ -66,6 +71,7 @@ const EXPERIENCES = [
   },
   {
     company: "Design + Augmented Intelligence Lab",
+    website: "https://dail.human.cornell.edu/",
     role: "Research Assistant",
     period: "August 2024 - January 2026",
     dateMark: "",
@@ -78,6 +84,7 @@ const EXPERIENCES = [
   },
   {
     company: "Johnson & Johnson",
+    website: "https://www.jnj.com/",
     role: "Data Science Intern",
     period: "May 2025 - August 2025",
     dateMark: "2025",
@@ -90,6 +97,7 @@ const EXPERIENCES = [
   },
   {
     company: "International Flavors & Fragrances",
+    website: "https://www.iff.com/",
     role: "Software Engineer Intern",
     period: "June 2024 - August 2024",
     dateMark: "2024",
@@ -102,6 +110,7 @@ const EXPERIENCES = [
   },
   {
     company: "Albers Lab - Mass General Hospital",
+    website: "https://alberslab.org/",
     role: "Research Assistant",
     period: "July 2022 - May 2023",
     dateMark: "2023",
@@ -181,6 +190,25 @@ function toAssetPath(path) {
   return `${trimmedBase}${normalizedPath}`;
 }
 
+function CoverVideo({ src, poster }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const video = ref.current;
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let visible = false;
+    const update = () => {
+      if (visible && !motion.matches && !document.hidden) video.play().catch(() => {});
+      else video.pause();
+    };
+    const observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; update(); });
+    observer.observe(video);
+    motion.addEventListener("change", update);
+    document.addEventListener("visibilitychange", update);
+    return () => { observer.disconnect(); motion.removeEventListener("change", update); document.removeEventListener("visibilitychange", update); };
+  }, []);
+  return <video ref={ref} src={toAssetPath(src)} poster={toAssetPath(poster)} muted loop playsInline preload="none" aria-hidden="true" />;
+}
+
 const RESUME_LINK = toAssetPath("/documents/resume.pdf");
 
 const AGENTIC_PROJECTS = [
@@ -202,6 +230,7 @@ const AGENTIC_PROJECTS = [
       "Cloud Functions",
       "Pharmacovigilance",
     ],
+    video: "/molecular/molecular-demo.mp4",
     images: [
       "/molecular/molecular%201.jpg",
       "/molecular/molecular%202.jpg",
@@ -211,12 +240,17 @@ const AGENTIC_PROJECTS = [
   {
     anchorId: "pantrypal",
     title: "PantryPal",
-    date: "May 2026",
+    date: "May 2026 · Updated September 2026",
     clientTag: "Personal Project",
     summary:
-      "Ever stare into your fridge with absolutely no idea what to cook? PantryPal is here to save the day. Just tell it what you've got, and let Chef (your AI sous chef) work some magic. Turning random pantry items into meals you actually want to eat.",
+      "A PCOS-focused kitchen companion that connects pantry ingredients, AI recipe ideas, meal planning, and daily symptom tracking in one simple flow.",
     details:
-      "PantryPal features intelligent inventory management across pantry, fridge, and freezer with smart quantity suggestions and automated expiry tracking. The AI Chef, powered by Google Gemini Pro, analyzes your current inventory to generate creative, nutritious recipes on demand. Recipes are automatically tagged for dietary needs including 'Healthier Choice,' 'PCOS Friendly,' and 'Low-GI.' The app supports collaborative households for real-time pantry syncing, seamless Grocery integration for missing ingredients, and provides detailed nutritional transparency with macros and prep difficulty. Built with a meticulously crafted editorial UI featuring smooth transitions and premium responsive design.",
+      "I redesigned PantryPal around the everyday decisions that come with planning meals for PCOS. A mobile-first green interface connects ingredient inventory with Gemini-powered recipes, shopping lists, and personal preferences. The latest update adds three connected tools that help users plan meals and reflect on their habits.",
+    features: [
+      { title: "Visual plate balancing", text: "Build a plate using a 50/25/25 vegetable, protein, and carbohydrate template, with a separate fat component. Select pantry ingredients or start from a recipe, adjust the portions, and see the app’s balance score and suggestions update. Send the result to Pantry Chef to generate a recipe." },
+      { title: "Craving SOS", text: "Choose from five craving or energy scenarios to explore quick snack ideas. Gemini can suggest a snack from ingredients already in the pantry, while missing items can be added directly to the grocery list." },
+      { title: "Daily check-ins and trends", text: "Log energy, cravings, bloating, brain fog, mood, and food habits in a quick daily check-in. Firestore stores entries and restores saved responses, while a seven-day view helps users reflect on their self-reported patterns." },
+    ],
     skills: [
       "Full-Stack Development",
       "React",
@@ -225,20 +259,24 @@ const AGENTIC_PROJECTS = [
       "Framer Motion",
       "Firebase Firestore",
       "Firebase Auth",
-      "Google Gemini Pro",
+      "Google Gemini",
       "AI Integration",
       "Real-time Sync",
     ],
-    video: "/pantrypal/pantrypal-demo.mp4",
+    video: "/pantrypal/pantrypal-pcos-demo.mp4",
+    imageLabels: ["Pantry overview", "Ingredient inventory", "Interactive plate balancer", "AI recipe suggestions", "Craving SOS", "Grocery list", "Pantry planner", "Daily symptom check-in", "Energy and craving trends", "Personal preferences"],
     images: [
-      "/pantrypal/pantrypal-screenshot-01.png",
-      "/pantrypal/pantrypal-screenshot-02.png",
-      "/pantrypal/pantrypal-screenshot-03.png",
-      "/pantrypal/pantrypal-screenshot-04.png",
-      "/pantrypal/pantrypal-screenshot-05.png",
-      "/pantrypal/pantrypal-screenshot-06.png",
-      "/pantrypal/pantrypal-screenshot-07.png",
-    ],
+      "/pantrypal/pantry-overview.png",
+      "/pantrypal/pantry-ingredients.png",
+      "/pantrypal/plate-balancer.png",
+      "/pantrypal/pantry-chef.png",
+      "/pantrypal/craving-sos.png",
+      "/pantrypal/grocery-list.png",
+      "/pantrypal/planner.png",
+      "/pantrypal/daily-check-in.png",
+      "/pantrypal/weekly-trends.png",
+      "/pantrypal/profile.png"
+],
   },
   {
     title: "Reframe",
@@ -1324,7 +1362,7 @@ function App() {
             <div className="section-heading"><div><p className="eyebrow">A few things I’m building and exploring</p><h2>Selected work</h2></div><a className="see-more-link" href={toHashRoute("/portfolio")}>Full portfolio ↗</a></div>
             <div className="selected-grid">
               <a className="selected-card" href={toHashRoute("/portfolio/molecular-data-chatbot")}>
-                <div className="selected-visual featured-art cover-molecular"><img src={toAssetPath("/molecular/molecular%201.jpg")} alt="" loading="lazy" width="1536" height="1024" /></div>
+                <div className="selected-visual featured-art cover-molecular"><CoverVideo src="/molecular/molecular-preview.mp4" poster="/molecular/molecular%201.jpg" /></div>
                 <div className="selected-copy"><p className="eyebrow">01 / AI + biotechnology</p><h3>Molecular Data Chatbot</h3><p>Connecting molecular structure and adverse-event risk through an agentic AI system at Johnson &amp; Johnson.</p><span className="card-link">Explore the project ↗</span></div>
               </a>
               <a className="selected-card" href={toHashRoute("/research")}>
@@ -1332,8 +1370,8 @@ function App() {
                 <div className="selected-copy"><p className="eyebrow">02 / Research + human experience</p><h3>Embodiment &amp; health in VR</h3><p>Investigating VR-based sensory remapping as a potential intervention for phantom limb pain with Weill Cornell Medical School.</p><span className="card-link">Explore my research ↗</span></div>
               </a>
               <a className="selected-card" href={toHashRoute("/portfolio/pantrypal")}>
-                <div className="selected-visual featured-art cover-pantry"><img src={toAssetPath("/pantrypal/pantrypal-screenshot-01.png")} alt="" loading="lazy" width="1536" height="1024" /></div>
-                <div className="selected-copy"><p className="eyebrow">03 / Product design + development</p><h3>PantryPal</h3><p>An AI kitchen companion that turns the ingredients you already have into ideas for your next meal.</p><span className="card-link">Explore the product ↗</span></div>
+                <div className="selected-visual featured-art cover-pantry"><CoverVideo src="/pantrypal/pantry-preview.mp4" poster="/pantrypal/pantry-overview.png" /></div>
+                <div className="selected-copy"><p className="eyebrow">03 / Product design + development</p><h3>PantryPal</h3><p>A PCOS-focused kitchen companion for AI recipe ideas, meal planning, and daily check-ins.</p><span className="card-link">Explore the product ↗</span></div>
               </a>
             </div>
           </section>
@@ -1405,7 +1443,7 @@ function App() {
           <section className="career-list" aria-label="Professional experience">
             {EXPERIENCES.filter(item => experienceFilter === "All roles" || (experienceFilter === "Research" ? item.role.includes("Research") : experienceFilter === "Teaching" ? item.role.includes("Teaching") : item.role.includes("Intern"))).map(item => <article className="career-row" key={`${item.company}-${item.role}`}>
               <div className="career-date"><span>{item.period}</span>{item.period.includes("Present") && <span className="current-label">Current</span>}</div>
-              <div className="career-content"><div className="career-heading"><img src={toAssetPath(item.logo)} alt="" /><div><p>{item.company}</p><h2>{item.role}</h2></div></div><p className="career-description">{item.description}</p><div className="career-skills">{item.skills.map(skill => <span key={skill}>{skill}</span>)}</div></div>
+              <div className="career-content"><div className="career-heading"><a className="company-logo-link" href={item.website} target="_blank" rel="noreferrer" aria-label={`Visit ${item.company} website`}><img src={toAssetPath(item.logo)} alt="" /></a><div><p><a className="company-name-link" href={item.website} target="_blank" rel="noreferrer">{item.company} <span aria-hidden="true">↗</span></a></p><h2>{item.role}</h2></div></div><p className="career-description">{item.description}</p><div className="career-skills">{item.skills.map(skill => <span key={skill}>{skill}</span>)}</div></div>
             </article>)}
           </section>
           <p className="career-note">Interested in the questions behind the work? <a href={toHashRoute("/research")}>Explore my research ↗</a></p>
@@ -1504,6 +1542,7 @@ function App() {
                     </div>
                   )}
 
+                  {expandedProject.features && <div className="project-features">{expandedProject.features.map(feature => <section key={feature.title}><h3>{feature.title}</h3><p>{feature.text}</p></section>)}</div>}
                   <div className="project-skills">
                     {(expandedProject.skills || []).map((skill) => (
                       <span key={`${expandedProject.title}-${skill}`} className="skill-tag">
@@ -1572,7 +1611,7 @@ function App() {
                       ...((expandedProject.images || []).map((imagePath, index) => ({
                         type: "image",
                         src: imagePath,
-                        label: `Screenshot ${index + 1}`,
+                        label: expandedProject.imageLabels?.[index] || `Screenshot ${index + 1}`,
                       }))),
                     ];
 
@@ -1589,7 +1628,8 @@ function App() {
                             <video
                               src={toAssetPath(activeSlide.src)}
                               controls
-                              autoPlay
+                              preload="metadata"
+                              poster={expandedProject.images?.[0] ? toAssetPath(expandedProject.images[0]) : undefined}
                               muted
                               playsInline
                               className="project-video project-video--carousel"
