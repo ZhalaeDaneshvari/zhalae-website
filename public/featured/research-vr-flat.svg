@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600" fill="none">
+  <rect width="900" height="600" fill="#17191d"/>
+  <g stroke="#303638" stroke-width="1"><path d="M100 150H800M100 300H800M100 450H800M225 90V510M450 90V510M675 90V510"/></g>
+  <g stroke="#98b989" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M180 300H290L330 245H405M290 300L340 350H410M290 300L265 215L220 180M265 215L300 155M290 300L245 395L190 425M245 395L290 445"/>
+    <path d="M645 300H710L745 245H790M710 300L760 365H800"/>
+  </g>
+  <g fill="#17191d" stroke="#b9d2ab" stroke-width="3"><circle cx="180" cy="300" r="9"/><circle cx="220" cy="180" r="7"/><circle cx="300" cy="155" r="7"/><circle cx="190" cy="425" r="7"/><circle cx="290" cy="445" r="7"/><circle cx="790" cy="245" r="7"/><circle cx="800" cy="365" r="7"/></g>
+  <path d="M405 230V207C405 166 444 140 490 140H529C577 140 615 166 615 207V230" stroke="#647266" stroke-width="12"/>
+  <rect x="375" y="225" width="280" height="150" rx="42" fill="#242c27" stroke="#bdd3b3" stroke-width="4"/>
+  <path d="M404 297C404 274 421 260 444 260H472C495 260 507 274 507 297C507 320 495 334 472 334H444C421 334 404 320 404 297ZM525 297C525 274 537 260 560 260H588C611 260 627 274 627 297C627 320 611 334 588 334H560C537 334 525 320 525 297Z" fill="#17191d" stroke="#7d9477" stroke-width="2"/>
+  <path d="M460 410H568" stroke="#647266" stroke-width="2"/>
+  <circle cx="290" cy="300" r="12" fill="#a8d18c"/>
+  <g fill="#acb8ae" font-family="monospace" font-size="13" letter-spacing="3"><text x="100" y="100">PERCEPTION</text><text x="635" y="500">VIRTUAL REALITY</text></g>
+</svg>

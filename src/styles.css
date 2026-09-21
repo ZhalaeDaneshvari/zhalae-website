@@ -2520,3 +2520,5 @@ body[data-theme="dark"] { --lime: #08ff08; --lime-bright: #58ff58; --lime-soft: 
 .project-detail-layout:has(.document-viewer) { grid-template-columns: 1fr; }
 .project-detail-layout:has(.document-viewer) .project-detail-copy { position: static; max-width: 850px; }
 .document-viewer { max-width: 1000px; margin: auto; }
+.featured-art img { object-position: top center; }
+.featured-art::after { display: none; }
