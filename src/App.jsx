@@ -805,15 +805,7 @@ function EnhancedHero({ roleTitles, typedName, onThemeToggle, theme }) {
 }
 
 function App() {
-  const [theme, setTheme] = useState(() => {
-    const savedTheme = localStorage.getItem("theme");
-
-    if (savedTheme === "dark" || savedTheme === "light") {
-      return savedTheme;
-    }
-
-    return "dark";
-  });
+  const [theme, setTheme] = useState("dark");
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [isCarouselPaused, setIsCarouselPaused] = useState(false);
   const [activeImage, setActiveImage] = useState(null);
@@ -1015,7 +1007,6 @@ function App() {
 
   useEffect(() => {
     document.body.setAttribute("data-theme", theme);
-    localStorage.setItem("theme", theme);
   }, [theme]);
 
   useEffect(() => {
@@ -1325,7 +1316,7 @@ function App() {
               <a className="btn btn-primary" href="#selected-work">Explore my work <span aria-hidden="true">↘</span></a>
               <a className="btn btn-ghost" href={toHashRoute("/resume")}>View résumé</a>
             </div>
-            <p className="intro-note">Information Science · Bachelor’s May 2026 · Master’s expected December 2026</p>
+            <p className="intro-note">Cornell University · Information Science · Bachelor’s May 2026 · Master’s expected December 2026</p>
           </section>
 
           <section id="selected-work" className="selected-work">
